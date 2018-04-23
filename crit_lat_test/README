@@ -1,0 +1,4 @@
+Testing of my 'critical latitude' estimator. 
+1) test dv/dy ~ vmax/cell width and doesn't vary too much
+2) Evaluate Held-Hou width: need a radiative eqm eq-pole diff and reference value, and Hadley cell height. 
+3) Look at latitude at which peak in vortex stretching term occurs

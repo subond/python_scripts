@@ -1,0 +1,96 @@
+# 18/01/2018 Compare time evolving versus steady state streamfunctions
+
+from data_handling import month_dic
+import numpy as np
+import xarray as xr
+import matplotlib.pyplot as plt
+from pylab import rcParams
+import sh
+from hadley_cell import mass_streamfunction
+import matplotlib.gridspec as gridspec
+
+
+def te_vs_ss(run_te, runs_ss, te_days):
+    
+    # Get number of days to be plotted
+    n=len(runs_ss)
+    print(n)
+    
+    # Set figure size
+    rcParams['figure.figsize'] = 3*n, 7.5
+    
+    # Get time evolving data and streamfunction
+    data_te = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run_te + '.nc')
+    psi_te = mass_streamfunction(data_te, a=6376.0e3, dp_in=50.)
+    psi_te /= 1.e9
+    
+    # Set up subplot layout
+    gs = gridspec.GridSpec(3, n,
+                           width_ratios=[1]*n,
+                           height_ratios=[1, 1, 0.5]
+                           )
+    gs.update(left=0.1, right=0.97, hspace=0.3)
+    axes = [plt.subplot(gs[i]) for i in range(3*n)]
+    
+    # Plot first row: overturning for time evolving case
+    for i in range(n):
+        psi_te[:,te_days[i],:].plot.contourf(ax=axes[i], x='lat', y='pfull', levels=np.arange(-500.,501.,50.), add_colorbar=False, add_labels=False, extend='both', yincrease=False)
+        axes[i].set_xlim(-45,45)
+        axes[i].set_xticklabels('')
+        axes[i].set_title('Day '+ str(te_days[i]*5))        # Label days
+
+        
+        
+    for i in range(n):
+        # Plot second row: overturning for steady state runs
+        data_ss = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + runs_ss[i] + '.nc')
+        psi_ss = mass_streamfunction(data_ss, a=6376.0e3, dp_in=50.)
+        psi_ss /= 1.e9
+        
+        psi_ss.plot.contourf(ax=axes[n+i], x='lat', y='pfull', levels=np.arange(-500.,501.,50.), add_colorbar=False, add_labels=False, extend='both', yincrease=False)
+        axes[n+i].set_xlim(-45,45)
+        
+        # Plot third row: SST used
+        data_ss.t_surf.mean('lon').plot(ax=axes[2*n+i])
+        
+        # Sort out labelling and axes lengths
+        axes[2*n+i].set_xlabel('')
+        axes[2*n+i].set_ylabel('')
+        axes[2*n+i].set_ylim(250,310)
+        axes[2*n+i].set_xlim(-90,90)
+        axes[2*n+i].set_yticks([250,280,310])
+        
+    for i in range(1,n):
+        # Get rid of y tick labels from plots not on the LHS
+        axes[i].set_yticklabels('')
+        axes[n+i].set_yticklabels('')
+        axes[2*n+i].set_yticklabels('')
+        
+    # Label rows
+    axes[0].set_ylabel('Time evolving')
+    axes[n].set_ylabel('Steady state')
+    axes[2*n].set_ylabel('SST, K')
+    
+    # Save plot
+    plt.savefig(plot_dir + run_te + '.pdf', format='pdf')
+    plt.close()  
+    
+    
+
+
+if __name__ == "__main__":
+    
+    plot_dir = '/scratch/rg419/plots/te_vs_ss/'
+    mkdir = sh.mkdir.bake('-p')
+    mkdir(plot_dir)
+    
+    
+    #runs_ss = ['sine_sst_10m_ss_'+str(i) for i in range(180,89,-10)]
+    
+    #te_vs_ss('sine_sst_10m', runs_ss, range(0,19,2))
+    
+    runs_ss = ['sn_1.000_ss_'+str(i) for i in range(180, 241, 10)]
+    
+    te_vs_ss('sn_1.000', runs_ss, list(range(36,55,2)))
+    
+    

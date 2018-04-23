@@ -1,0 +1,65 @@
+"""
+Load in the vorticity budget terms and produce a lat-time plot at 150 hPa
+
+"""
+import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
+from data_handling import time_means, month_dic
+import sh
+from physics import gradients as gr
+from pylab import rcParams
+
+def vort_eq_hm(run, lev=150, lonin=[-1.,361.]):
+    
+    rcParams['figure.figsize'] = 10, 15
+    rcParams['font.size'] = 25
+    rcParams['text.usetex'] = True
+    
+    plot_dir = '/scratch/rg419/plots/clean_diags/'+run+'/'
+    mkdir = sh.mkdir.bake('-p')
+    mkdir(plot_dir)
+    
+    #Load in vorticity budget term means
+    data_vort = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/vort_eq'+run+'.nc')
+    data_vort = data_vort * 86400.**2. #Convert to day^-2
+    
+    #Also load climatological data so that transient eddies can be calculated (***NB should evaluate these from daily data tomorrow***)
+    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/'+run+'.nc')
+    data = data * 86400.**2. #Convert to day^-2
+    
+    if lonin[1]>lonin[0]:
+        lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
+    else:
+        lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] or data.lon[i] < lonin[1]]
+    
+    # Calculate vertical component of absolute vorticity = f + dv/dx - du/dy
+    omega = 7.2921150e-5
+    f = 2 * omega * np.sin(data.lat *np.pi/180)
+    v_dx = gr.ddx(data.vcomp.sel(pfull=lev))  # dvdx
+    u_dy = gr.ddy(data.ucomp.sel(pfull=lev))  # dudy
+    vor = v_dx - u_dy + f
+    
+    dvordx = gr.ddx(vor)
+    dvordy = gr.ddy(vor, vector=False)
+    
+    horiz_md_mean = -1. * (data.ucomp.sel(pfull=lev) * dvordx + data.vcomp.sel(pfull=lev) * dvordy)
+    
+    div = gr.ddx(data.ucomp.sel(pfull=lev)) + gr.ddy(data.vcomp.sel(pfull=lev))
+    stretching_mean = -1. * vor * div
+    
+    transient = data_vort.horiz_md + data_vort.stretching - horiz_md_mean - stretching_mean
+    
+    
+    
+    mn_dic = month_dic(1)
+    tickspace = range(13,72,18)
+    labels = [mn_dic[(k+5)/6 ] for k in tickspace]
+    
+    
+        
+abs_vort_hm('ap_2')
+#abs_vort_hm('full_qflux')
+#abs_vort_hm('full_qflux', lonin=[60.,150.])
+
+

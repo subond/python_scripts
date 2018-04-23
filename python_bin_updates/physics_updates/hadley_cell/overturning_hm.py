@@ -1,0 +1,76 @@
+# Plot the surface temperature and precipitation through the year for the monsoon region
+
+from data_handling_updates import month_dic
+import numpy as np
+import xarray as xr
+import matplotlib.pyplot as plt
+from pylab import rcParams
+import sh
+from hadley_cell import mass_streamfunction, get_edge_psi
+
+
+
+def pick_lons(data, lonin):
+    #Find index range covering specified longitudes
+    if lonin[1]>lonin[0]:
+        lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
+    else:
+        lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] or data.lon[i] < lonin[1]]
+    return lons
+    
+def overturning_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, month_labels=True, thresh=0., nh=False):
+    
+    lons = pick_lons(data, lonin)
+    
+    psi = mass_streamfunction(data, a=6376.0e3, dp_in=50., lons=lons)
+    psi /= 1.e9
+    
+    edge_loc, psi_max, psi_max_loc = get_edge_psi(data, lonin=lonin, lev=500., thresh=thresh, nh=nh)
+    
+    f1 = psi.sel(pfull=500.).plot.contourf(ax=ax_in, x='xofyear', y='lat', levels=np.arange(-500.,510.,50.), add_colorbar=False, add_labels=False, extend='both')
+    edge_loc.plot(color='k', ax=ax_in)
+    psi_max_loc.plot(color='k', ax=ax_in)
+        
+    ax_in.set_ylabel('Latitude')
+    ax_in.set_ylim(-60,60)
+    ax_in.set_yticks(np.arange(-60.,61.,30.))
+    ax_in.grid(True,linestyle=':')
+    
+    if month_labels:
+        mn_dic = month_dic(1)
+        tickspace = list(range(13,72,18))
+        labels = [mn_dic[(k+5)/6 ] for k in tickspace]
+    
+        ax_in.set_xlim((1,72))
+        ax_in.set_xticks(tickspace)
+    
+        if do_xlabels:
+            ax_in.set_xlabel('')
+            ax_in.set_xticklabels(labels,rotation=25)
+    
+    return f1
+
+
+if __name__ == "__main__":
+    
+    data_zs = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/zs_sst.nc')
+    data_ep = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/sn_1.000.nc')
+    
+    plot_dir = '/scratch/rg419/plots/itcz_plots/'
+    mkdir = sh.mkdir.bake('-p')
+    mkdir(plot_dir)
+    
+    #rcParams['figure.figsize'] = 6, 10
+    #rcParams['font.size'] = 20
+    
+    fig, (ax1, ax2) = plt.subplots(2, sharex=True)
+    f1 = overturning_plot(data_zs, ax1)
+    overturning_plot(data_ep, ax2, do_xlabels=True)
+    plt.subplots_adjust(left=0.2, right=0.95, top=0.95, bottom=0., hspace=0.2)
+    #Colorbar
+    cb1=fig.colorbar(f1, ax=(ax1, ax2), use_gridspec=True, orientation = 'horizontal',fraction=0.15, pad=0.07, aspect=30)
+    cb1.set_label('Mass streamfunction')
+    
+    plt.savefig(plot_dir+'overturning_hm_test.pdf', format='pdf')
+    plt.close()        
+
