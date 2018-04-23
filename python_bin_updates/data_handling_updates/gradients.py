@@ -3,7 +3,7 @@
 
 import numpy as np
 import xarray as xr
-from finite_difference import diff_cfd, cfd #_old as cfd
+from finite_difference import cfd#_old as cfd
 
 def ddx(field, a = 6376.0e3):
     """Calculate d/dx of a given DataArray. DataArray must include lat and lon dimensions"""
@@ -18,7 +18,7 @@ def ddx(field, a = 6376.0e3):
         raise NameError('Coord lat not found')
     
     coslat = np.cos(field.lat * np.pi/180)
-    field_dx = cfd( field.values, field.lon*np.pi/180, field.get_axis_num('lon') )   
+    field_dx = cfd( field.values, field.lon.values*np.pi/180, field.get_axis_num('lon') )   
     field_dx = xr.DataArray( field_dx, dims = field.dims, coords = field.coords )
     field_dx = field_dx/coslat/a
     
@@ -44,7 +44,7 @@ def ddy(field, vector = True, uv = False, a = 6376.0e3):
     else:
         cosfac = 1.
     
-    field_dy = cfd( (field*cosfac).values, field.lat*np.pi/180, field.get_axis_num('lat') )   
+    field_dy = cfd( (field*cosfac).values, field.lat.values*np.pi/180, field.get_axis_num('lat') )   
     field_dy = xr.DataArray( field_dy, dims = field.dims, coords = field.coords )
     field_dy = field_dy/cosfac/a
     
@@ -59,7 +59,7 @@ def ddp(field):
     except:
         raise NameError('Coord pfull not found')
     
-    field_dp = cfd( field.values, field.pfull*100., field.get_axis_num('pfull') )   
+    field_dp = cfd( field.values, field.pfull.values*100., field.get_axis_num('pfull') )   
     field_dp = xr.DataArray( field_dp, dims = field.dims, coords = field.coords )
     
     return field_dp
@@ -67,16 +67,14 @@ def ddp(field):
 
 def ddt(field, timedir = 'xofyear', secperunit = 5.*86400., cyclic=True):
     """Calculate d/dt in unit/s of a given DataArray. DataArray must include a time dimension
-       Define seconds per unit time using secperunit. Default calc is for pentads
-       cyclic option chooses whether dataset is cyclic in time (ie a seasonal cycle) or not. Default True."""
+       Define seconds per unit time using secperunit. Default calc is for pentads"""
     
     try:
         field.coords[timedir]
     except:
         raise NameError('Coord ' + timedir + ' not found')
     
-    field_dt = cfd( field.values, field.get_axis_num(timedir), cyclic=cyclic)
-    field_dt = field_dt/secperunit/2.
+    field_dt = cfd( field.values, field.coords[timedir].values*secperunit, field.get_axis_num(timedir), cyclic=cyclic)/secperunit/2.
     field_dt = xr.DataArray( field_dt, dims = field.dims, coords = field.coords )
     
     return field_dt

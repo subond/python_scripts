@@ -40,7 +40,7 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
         data_vort = data 
         data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/vort_eq_uv'+run+'.nc')
         
-    print('vorticity budget data loaded')
+    print 'vorticity budget data loaded'
     
     if lonin[1]>lonin[0]:
         lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
@@ -195,7 +195,7 @@ def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labe
     
     levels = np.arange(-1.5,1.6,0.25)
     
-    print('starting plotting')
+    print 'starting plotting'
     
     # Set number of panels and declare which are the left column, bottom row.
     if planetary_only or no_eddies:
@@ -285,7 +285,7 @@ def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labe
     # If month labels are being used, load in the month dictionary and set up labelling, then label bottom row
     if month_labels:
         mn_dic = month_dic(1)
-        tickspace = list(range(13,72,18))
+        tickspace = range(13,72,18)
         labels = [mn_dic[(k+5)/6 ] for k in tickspace]
     
         for ax in bottom_row:
@@ -337,7 +337,7 @@ def vort_eq_ss(run, lonin=[-1.,361.], planetary_only=False, rot_fac=1., no_eddie
     ds = vort_budg_terms(run, lonin=lonin, do_ss=True, rot_fac=rot_fac, planetary_only=planetary_only, no_eddies=no_eddies)
     
     
-    print('starting plotting')
+    print 'starting plotting'
     
     # Set number of panels and declare which are the left column, bottom row.
     if planetary_only or no_eddies:
@@ -451,7 +451,7 @@ def vort_eq_ll(run, planetary_only=False, rot_fac=1., no_eddies=False, lev=150.)
     # Select level to plot
     ds = ds.sel(pfull=lev)
     
-    print('starting plotting')
+    print 'starting plotting'
     
     # Set number of panels and declare which are the left column, bottom row.
     if planetary_only or no_eddies:
