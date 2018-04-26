@@ -51,7 +51,7 @@ def precip_mse_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, plot_type=N
         f1 = precip_plot.plot.contourf(ax=ax_in, x='xofyear', y='lat', levels = np.arange(2.,15.,2.), add_colorbar=False, add_labels=False, extend='max', cmap='Blues', linewidth=2)
         if p_cent:
             data = precip_centroid(data,lonin=lonin)
-            data.p_cent.plot.line(color='w', ax=ax_in)
+            data.p_cent.plot.line(color='k', ax=ax_in, linewidth=2)
             ax_in.set_xlabel('')
             
     elif plot_type == 'mse':

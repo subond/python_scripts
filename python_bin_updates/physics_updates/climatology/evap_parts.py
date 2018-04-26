@@ -1,6 +1,6 @@
 # 8/12/2017 Plot parts of evaporative flux to try to see where structure comes from.
 
-from data_handling_updates import month_dic, model_constants as mc, gradients as gr
+from data_handling_updates import month_dic, model_constants as mc, gradients as gr, make_sym
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -24,9 +24,9 @@ def pick_lons(data, lonin):
     return lons
 
 
-def evap_parts(run, lonin=[-1.,361.]):
+def evap_parts(run, lonin=[-1.,361.], do_make_sym=True):
     
-    rcParams['figure.figsize'] = 6, 10
+    rcParams['figure.figsize'] = 6, 9
     rcParams['font.size'] = 16
     
     plot_dir = '/scratch/rg419/plots/surface_fluxes/'
@@ -61,6 +61,11 @@ def evap_parts(run, lonin=[-1.,361.]):
     #q_s.plot.contourf(x='xofyear', y='lat', levels=np.arange(0,0.02,0.001))
     #plt.show()
     
+    if do_make_sym:
+        qdiff = make_sym(qdiff)
+        rho_a = make_sym(rho_a)
+        v_a = make_sym(v_a)
+    
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
 
     
@@ -76,9 +81,12 @@ def evap_parts(run, lonin=[-1.,361.]):
     for ax in [ax1,ax2,ax3]:
         ax.set_ylim([-60,60])
         ax.set_yticks([-60,-30,0,30,60])
+        ax.set_ylabel('Latitude')
         ax.grid(True,linestyle=':')
     ax3.set_xticks([12,24,36,48,60,72])
     ax3.set_xlabel('Pentad')
+    
+    plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.1)
 
     plt.savefig(plot_dir + 'evap_parts_' + run + '.pdf', format='pdf')
     plt.close()

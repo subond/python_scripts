@@ -1,6 +1,6 @@
 # 1/12/2017 Plot hms of SST, precip, SW net, LW net, SH and LH
 
-from data_handling_updates import month_dic,  model_constants as mc, gradients as gr
+from data_handling_updates import month_dic,  model_constants as mc, gradients as gr, make_sym
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ def pick_lons(data, lonin):
     return lons
 
 
-def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1.):
+def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym=True):
     
     rcParams['figure.figsize'] = 12, 10
     rcParams['font.size'] = 16
@@ -31,6 +31,13 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1.):
     mkdir(plot_dir)
     
     data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    
+    data['flux_lw_up'] = data.t_surf ** 4. * mc.stefan
+    data['dTdt'] = gr.ddt(data.t_surf) * 86400. * scale_fac
+    
+    if do_make_sym:
+        for field in ['t_surf','dTdt','flux_sw','flux_lw','flux_lw_up','flux_t','flux_lhe']:
+            data[field] = make_sym(data[field])
     
     lons = pick_lons(data, lonin)
     
@@ -46,8 +53,7 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1.):
         levels_dt = np.arange(-0.5,0.51,0.01)
         levels_flux = np.arange(-300.,305.,10.)
     
-    flux_lw_up = data.t_surf ** 4. * mc.stefan
-    dTdt = gr.ddt(data.t_surf) * 86400. * scale_fac
+
     
     f, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, sharex='col', sharey='row')
     left_column = [ax1,ax3,ax5]
@@ -60,13 +66,13 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1.):
     data.t_surf.plot.contourf(x='xofyear', y='lat', levels=levels_t, ax=ax1, extend = 'both', add_labels=False)
     ax1.set_title('SST')
     
-    dTdt.plot.contourf(x='xofyear', y='lat',  ax=ax2, levels=levels_dt, extend = 'both', add_labels=False, cmap='RdBu_r')
+    data.dTdt.plot.contourf(x='xofyear', y='lat',  ax=ax2, levels=levels_dt, extend = 'both', add_labels=False, cmap='RdBu_r')
     ax2.set_title('d(SST)/dt')
     
     data.flux_sw.plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax3, extend = 'both', add_labels=False, cmap='RdBu_r')
     ax3.set_title('Net downward SW flux')
     
-    (data.flux_lw - flux_lw_up).plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax4, extend = 'both', add_labels=False, cmap='RdBu_r')
+    (data.flux_lw - data.flux_lw_up).plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax4, extend = 'both', add_labels=False, cmap='RdBu_r')
     ax4.set_title('Net downward LW flux')
     
     (-1.*data.flux_t).plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax5, extend = 'both', add_labels=False, cmap='RdBu_r')
@@ -82,6 +88,9 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1.):
         ax.set_xlabel('Pentad')
     for ax in all_plots:
         ax.grid(True,linestyle=':')
+        ax.set_xticks([12,24,36,48,60,72])
+        ax.set_ylim([-60,60])
+        
     
     if not diff_run == None:
         plt.savefig(plot_dir + 'surface_fluxes_' + run + '_' + diff_run + '.pdf', format='pdf')

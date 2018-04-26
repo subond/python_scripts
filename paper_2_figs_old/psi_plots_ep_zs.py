@@ -23,20 +23,13 @@ mkdir = sh.mkdir.bake('-p')
 mkdir(plot_dir)
     
 rcParams['figure.figsize'] = 10, 10
-rcParams['font.size'] = 16
+rcParams['font.size'] = 14
 
 
 def psi_u_plot(data, tf, ax):
     
     psi = mass_streamfunction(data, a=6376.0e3, dp_in=50.)
     psi /= 1.e9
-    
-    n = len(data.xofyear.values)//2
-    psi_temp = np.zeros(psi.values.shape)
-    for i in range(0,n):
-        psi_temp[:,i,:] = (psi[:,i,:].values - psi[::-1,i+n,:].values)/2.
-        psi_temp[:,i+n,:] = -1.*psi_temp[::-1,i,:]
-    psi = xr.DataArray(psi_temp, coords=[data.lat, data.xofyear.values, psi.pfull], dims=['lat', 'xofyear', 'pfull'])
     
     f1 = data.ucomp[tf[0]:tf[1],:,:].mean(('xofyear','lon')).plot.contourf(ax=ax, x='lat', y='pfull', yincrease=False, levels=np.arange(-50.,50.1,5.), extend='both', add_labels=False, add_colorbar=False)
     psi[:,tf[0]:tf[1],:].mean('xofyear').plot.contour(ax=ax, x='lat', y='pfull', yincrease=False, levels=np.arange(0.,301,60.), colors='k', add_labels=False)

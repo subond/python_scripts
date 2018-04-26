@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from climatology import precip_centroid
 from data_handling_updates import gradients as gr
 from pylab import rcParams
-from data_handling_updates import make_sym
 
 
 def p_cent_rate_max(runs, days=None):
@@ -32,7 +31,16 @@ def p_cent_rate_max(runs, days=None):
         except:
             data['precipitation'] = data.precipitation
         
-        data['precipitation'] = make_sym(data.precipitation)
+        precip_temp = np.zeros(data.precipitation.values.shape)
+    
+        n = len(data.xofyear.values)//2
+    
+        for i in range(0,n):
+            precip_temp[i,:,:] = (data.precipitation[i,:,:].values + data.precipitation[i+n,::-1,:].values)/2.
+            precip_temp[i+n,:,:] = precip_temp[i,::-1,:]
+        precip_temp = xr.DataArray(precip_temp, coords=[data.xofyear.values, data.lat, data.lon], dims=['xofyear', 'lat', 'lon'])
+        
+        data['precipitation'] = precip_temp
 
         # Locate precipitation centroid
         precip_centroid(data)
@@ -88,8 +96,8 @@ if __name__ == "__main__":
     max_rate_15, max_rate_lat_15 = p_cent_rate_max(runs_15)
     
     ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat, 'xk', mew=2, ms=10)
-    ax1.plot([0.75, 1., 1.25], max_rate_lat_5, 'xb', mew=2, ms=10)
-    ax1.plot([0.75, 1., 1.25], max_rate_lat_15, 'xr', mew=2, ms=10)
+   # ax1.plot([0.75, 1., 1.25], max_rate_lat_5, 'xb', mew=2, ms=10)
+    #ax1.plot([0.75, 1., 1.25], max_rate_lat_15, 'xr', mew=2, ms=10)
     #ax1.set_xscale('log')
     #ax1.set_yscale('log')
     ax1.set_ylabel('Lat. of max rate')

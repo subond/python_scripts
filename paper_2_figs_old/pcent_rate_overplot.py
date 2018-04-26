@@ -8,7 +8,7 @@ import sh
 import numpy as np
 import matplotlib.pyplot as plt
 from climatology import precip_centroid
-from data_handling_updates import gradients as gr, make_sym
+from data_handling_updates import gradients as gr
 from pylab import rcParams
 
 
@@ -29,7 +29,15 @@ def p_cent_rate(data, days=False):
     except:
         data['precipitation'] = data.precipitation
         
-    data['precipitation'] = make_sym(data.precipitation)
+    precip_temp = np.zeros(data.precipitation.values.shape)
+    
+    n = len(data.xofyear.values)//2
+    for i in range(0,n):
+        precip_temp[i,:,:] = (data.precipitation[i,:,:].values + data.precipitation[i+n,::-1,:].values)/2.
+        precip_temp[i+n,:,:] = precip_temp[i,::-1,:]
+    precip_temp = xr.DataArray(precip_temp, coords=[data.xofyear.values, data.lat, data.lon], dims=['xofyear', 'lat', 'lon'])
+    
+    data['precipitation'] = precip_temp
     
     
     # Locate precipitation centroid
@@ -146,37 +154,36 @@ if __name__ == "__main__":
     set_plot_features(ax2, title='Varying Year Lengths (Rates scaled)', legend_labels=['0.25', '0.5', '1.0', '2.0', '4.0'], leg_title='P/P$_{E}$')
     
     
+    # Second subplot - rotation rates
+    runs = ['rt_0.500', 'rt_0.750', 'sn_1.000', 
+            'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
+    j=0
+    for i in range(0,7):
+        if runs[i] == 'sn_1.000':
+            p_cent_grad_scatter(runs[i], color='k', ax=ax3, linewidth=2.)    
+        else:
+            p_cent_grad_scatter(runs[i], color=colors[j], ax=ax3, linewidth=1.)
+            j=j+1
+    set_plot_features(ax3, title='Varying Rotation Rates', legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.0'], leg_title='$\Omega$/$\Omega_{E}$')
+    
+    
     # Third subplot - mixed layer depths
     runs = ['mld_2.5', 'mld_5', 'sn_1.000', 
             'mld_15', 'ap_20']
     j=0
     for i in range(0,5):
         if runs[i] == 'sn_1.000':
-            p_cent_grad_scatter(runs[i], color='k', ax=ax3, linewidth=2.)    
-        else:
-            p_cent_grad_scatter(runs[i], color=colors[j], ax=ax3, linewidth=1.)
-            j=j+1
-    set_plot_features(ax3, title='Varying MLDs', legend_labels=['2.5', '5.', '10.', '15.', '20.'], leg_title='MLD (m)')
-    
-    # Fourth subplot - rotation rates
-    runs = ['rt_0.500', 'rt_0.750', 'sn_1.000', 
-            'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
-    j=0
-    for i in range(0,7):
-        if runs[i] == 'sn_1.000':
             p_cent_grad_scatter(runs[i], color='k', ax=ax4, linewidth=2.)    
         else:
             p_cent_grad_scatter(runs[i], color=colors[j], ax=ax4, linewidth=1.)
             j=j+1
-    set_plot_features(ax4, title='Varying Rotation Rates', legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.0'], leg_title='$\Omega$/$\Omega_{E}$')
-    
+    set_plot_features(ax4, title='Varying MLDs', legend_labels=['2.5', '5.', '10.', '15.', '20.'], leg_title='MLD (m)')
     
     for ax in [ax1, ax3]:
         ax.set_ylabel('P. cent. lat. rate')
     
     for ax in [ax3, ax4]:
         ax.set_xlabel('Precip centroid lat.')
-    
     
     plt.subplots_adjust(left=0.07, right=0.9, top=0.95, bottom=0.1, hspace=0.25, wspace=0.37)
     
