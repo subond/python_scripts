@@ -15,7 +15,7 @@ from data_handling_updates import time_means
 
 
 
-for run in ["rt_0.750_5","rt_1.250_5"]: 
+for run in ["rt_0.500_5","rt_0.500_15", "rt_1.500_5","rt_1.500_15", "rt_1.750_5","rt_1.750_15","rt_2.000_5",]: 
     print(run)
     for i in range(121,481):
         #print(i)
@@ -30,9 +30,10 @@ for run in ["rt_0.750_5","rt_1.250_5"]:
         
         except:
             print(i)
+    test=time_means(run, [121,481], filename='plev_pentad', timeav='pentad', write_netcdf=True)
 
-test=time_means('rt_0.750_5', [121,481], filename='plev_pentad', timeav='pentad', write_netcdf=True)
-test=time_means('rt_1.250_5', [121,481], filename='plev_pentad', timeav='pentad', write_netcdf=True)
+#test=time_means('rt_0.750_5', [121,481], filename='plev_pentad', timeav='pentad', write_netcdf=True)
+#test=time_means('rt_1.250_5', [121,481], filename='plev_pentad', timeav='pentad', write_netcdf=True)
 
 
         #infile = '/scratch/rg419/Data_moist/' + run + '/run%04d/atmos_daily_mean.nc' % i

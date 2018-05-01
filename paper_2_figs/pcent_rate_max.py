@@ -18,6 +18,7 @@ def p_cent_rate_max(runs, days=None):
     
     max_rate = []
     max_rate_lat = []
+    max_lat = []
     if days==None:
         days=[False]*len(runs)
         
@@ -42,7 +43,8 @@ def p_cent_rate_max(runs, days=None):
             dpcentdt = gr.ddt(data.p_cent, secperunit = 86400.) * 86400.
         else:
             dpcentdt = gr.ddt(data.p_cent) * 86400.
-                    
+        
+        pcent_max = data.p_cent.max('xofyear')            
     
         dpcentdt_ppos = dpcentdt.where(data.p_cent>=0.)   # Find precip centroid rate where precip centroid is in the northern hemisphere
         dpcentdt_max = dpcentdt_ppos.where(dpcentdt_ppos==dpcentdt_ppos.max(),drop=True)   # Find the maximum of the above
@@ -54,13 +56,15 @@ def p_cent_rate_max(runs, days=None):
         
         max_rate.append(dpcentdt_max)
         max_rate_lat.append(pcent_dtmax)
+        max_lat.append(pcent_max)
         
         j=j+1
     
     max_rate = np.asarray(max_rate)
     max_rate_lat = np.asarray(max_rate_lat)
+    max_lat = np.asarray(max_lat)
     
-    return max_rate, max_rate_lat
+    return max_rate, max_rate_lat, max_lat
     
     
 
@@ -83,30 +87,32 @@ if __name__ == "__main__":
     runs_15 = ['rt_0.750_15', 'mld_15', 'rt_1.250_15']
     
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    max_rate, max_rate_lat = p_cent_rate_max(runs)
-    max_rate_5,  max_rate_lat_5 = p_cent_rate_max(runs_5)
-    max_rate_15, max_rate_lat_15 = p_cent_rate_max(runs_15)
+    max_rate, max_rate_lat, max_lat = p_cent_rate_max(runs)
+    max_rate_5,  max_rate_lat_5, max_lat_5 = p_cent_rate_max(runs_5)
+    max_rate_15, max_rate_lat_15, max_lat_15 = p_cent_rate_max(runs_15)
     
     ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat, 'xk', mew=2, ms=10)
     ax1.plot([0.75, 1., 1.25], max_rate_lat_5, 'xb', mew=2, ms=10)
     ax1.plot([0.75, 1., 1.25], max_rate_lat_15, 'xr', mew=2, ms=10)
-    #ax1.set_xscale('log')
-    #ax1.set_yscale('log')
+    ax1.set_xscale('log')
+    ax1.set_yscale('log')
     ax1.set_ylabel('Lat. of max rate')
     
-    ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate, 'xk', mew=2, ms=10)
-    ax2.plot([0.75, 1., 1.25], max_rate_5, 'xb', mew=2, ms=10)
-    ax2.plot([0.75, 1., 1.25], max_rate_15, 'xr', mew=2, ms=10)
+    ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat, 'xk', mew=2, ms=10)
+    ax2.plot([0.75, 1., 1.25], max_lat_5, 'xb', mew=2, ms=10)
+    ax2.plot([0.75, 1., 1.25], max_lat_15, 'xr', mew=2, ms=10)
     ax2.set_xlabel('')
     #ax2.set_ylim([0,1.1])
-    ax2.set_yticks([0,0.25,0.5,0.75])
-    ax2.set_ylabel('Max rate')
+    #ax2.set_yticks([0,0.25,0.5,0.75])
+    ax2.set_xscale('log')
+    ax2.set_yscale('log')
+    ax2.set_ylabel('Amplitude')
     
     ax2.set_xlabel('$\Omega$/$\Omega_{E}$')
     
-    plt.subplots_adjust(right=0.95, left=0.2, top=0.95, bottom=0.1, hspace=0.1)
+    plt.subplots_adjust(right=0.95, left=0.2, top=0.95, bottom=0.1, hspace=0.15)
     
-    plt.savefig(plot_dir + 'rotation_scatter.pdf', format='pdf')
+    plt.savefig(plot_dir + 'rotation_scatter_log.pdf', format='pdf')
     plt.close()
     
     

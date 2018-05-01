@@ -1,6 +1,6 @@
 """
 Calculate precipitation centroid. Calculation based on Frierson and Hwang 2012 (J. Clim.) and Donohoe et al. 2013 (J. Clim.)
-Last edit 3/11/2017
+Modified 1/05/2018 to take multiple years of input data to allow error calculations
 
 """
 
@@ -50,24 +50,51 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.]):
     lats_new = np.arange(-lat_bound, lat_bound+0.1, 0.1)
     p_new = f(lats_new)
     
-    # Determine whether p_new is 2d or 1d and create DataArray
-    try:
-         p_new = xr.DataArray(p_new, coords=[data.xofyear.values, lats_new], dims=['xofyear', 'lat'])
-    except:
+    # Determine the time dimensions of p_new and create DataArray
+    if 'year_no' in data.coords:
+        p_new = xr.DataArray(p_new, coords=[data.year_no.values, data.xofyear.values, lats_new], dims=['year_no', 'xofyear', 'lat'])
+    elif 'xofyear' in data.coords:
+        p_new = xr.DataArray(p_new, coords=[data.xofyear.values, lats_new], dims=['xofyear', 'lat'])
+    else:
         p_new = xr.DataArray(p_new, coords=[lats_new], dims=['lat'])
+        
+    #try:
+    #     p_new = xr.DataArray(p_new, coords=[data.xofyear.values, lats_new], dims=['xofyear', 'lat'])
+    #except:
+    #    p_new = xr.DataArray(p_new, coords=[lats_new], dims=['lat'])
             
     # Calculate cumulative sum of precip with latitude
     p_area_int = p_new.cumsum('lat')
     
     # At each time find the precipitation centroid: the latitude at which half of the area integrated precip lies North/South
-    try:
+    # Loop over time dimensions, if these exist
+    if 'year_no' in data.coords:
+        p_cent = np.zeros((len(p_new.year_no.values),len(p_new.xofyear.values),))
+        for j in range(len(p_new.year_no.values)):
+            for i in range(1,len(p_new.xofyear.values)+1):
+                p_cent[j,i-1] = p_new.lat[p_area_int.sel(xofyear=i, year_no=j) <= 0.5 * p_area_int.sel(xofyear=i, year_no=j).max('lat')].max('lat').values
+    
+        p_cent= xr.DataArray(p_cent, coords=[p_new.year_no.values, p_new.xofyear.values], dims=['year_no', 'xofyear'])
+    
+            
+    elif 'xofyear' in data.coords:
         p_cent = np.zeros((len(p_new.xofyear.values),))
         for i in range(1,len(p_new.xofyear.values)+1):
             p_cent[i-1] = p_new.lat[p_area_int.sel(xofyear=i) <= 0.5 * p_area_int.sel(xofyear=i).max('lat')].max('lat').values
         
         p_cent= xr.DataArray(p_cent, coords=[p_new.xofyear.values], dims=['xofyear'])
-    except:
+    
+    else:
         p_cent = p_new.lat[p_area_int <= 0.5 * p_area_int.max('lat')].max('lat').values
+        
+    #try:
+    #    p_cent = np.zeros((len(p_new.xofyear.values),))
+    #    for i in range(1,len(p_new.xofyear.values)+1):
+    #        p_cent[i-1] = p_new.lat[p_area_int.sel(xofyear=i) <= 0.5 * p_area_int.sel(xofyear=i).max('lat')].max('lat').values
+        
+    #    p_cent= xr.DataArray(p_cent, coords=[p_new.xofyear.values], dims=['xofyear'])
+    #except:
+    #    p_cent = p_new.lat[p_area_int <= 0.5 * p_area_int.max('lat')].max('lat').values
     
     data['p_cent'] = p_cent
     

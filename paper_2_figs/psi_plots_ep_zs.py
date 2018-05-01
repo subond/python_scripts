@@ -73,6 +73,7 @@ for ax in [ax10, ax11, ax12]:
     
 for ax in [ax1, ax4, ax7, ax10]:
     ax.set_ylabel('Pressure, hPa')
+    ax.set_yticks([0,200,400,600,800,1000.])
     
 ax1.set_title('Pentad 32-35')
 ax2.set_title('Pentad 39-42')
@@ -82,7 +83,7 @@ axes = (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12)
 
 plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.0, hspace=0.2, wspace=0.2)
 #Colorbar
-cb1=fig.colorbar(f1, ax=axes, use_gridspec=True, orientation = 'horizontal',fraction=0.15, pad=0.1, aspect=30, shrink=0.5)
+cb1=fig.colorbar(f1, ax=axes, use_gridspec=True, orientation = 'horizontal',fraction=0.1, pad=0.1, aspect=30, shrink=0.5)
 cb1.set_label('Zonal wind speed, m/s')
 
 plt.savefig(plot_dir+'psi_ep_zs.pdf', format='pdf')
