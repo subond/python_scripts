@@ -142,15 +142,27 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
         
         j=j+1 # Add 1 to counter to get values for next run
     
-    # Convert all output to xarrays    
-    if months==None:
-         max_rate = xr.DataArray(np.asarray(max_rate), coords=[runs,['clim']], dims=['run','year_no'])
-         max_rate_lat = xr.DataArray(np.asarray(max_rate_lat), coords=[runs,['clim']], dims=['run','year_no'])
-         max_lat = xr.DataArray(np.asarray(max_lat), coords=[runs,['clim']], dims=['run','year_no'])
+    # Convert all output to xarrays   
+    if do_make_sym: 
+        if months==None:
+            coords_yrno = ['clim']
+        else:
+            coords_yrno = data.year_no.values
+            
+        max_rate = xr.DataArray(np.asarray(max_rate), coords=[runs,coords_yrno], dims=['run','year_no'])
+        max_rate_lat = xr.DataArray(np.asarray(max_rate_lat), coords=[runs,coords_yrno], dims=['run','year_no'])
+        max_lat = xr.DataArray(np.asarray(max_lat), coords=[runs,coords_yrno], dims=['run','year_no'])
+
     else:
-        max_rate = xr.DataArray(max_rate, coords=[runs,data.year_no.values], dims=['run','year_no'])
-        max_rate_lat = xr.DataArray(max_rate_lat, coords=[runs,data.year_no.values], dims=['run','year_no'])
-        max_lat = xr.DataArray(max_lat, coords=[runs,data.year_no.values], dims=['run','year_no'])
+        if months==None:
+            coords_yrno = ['clim']
+        else:
+            coords_yrno = data.year_no.values
+        print(np.asarray([max_rate,max_rate_s]))
+        max_rate = xr.DataArray(np.asarray([max_rate,max_rate_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
+        max_rate_lat = xr.DataArray(np.asarray([max_rate_lat,max_rate_lat_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
+        max_lat = xr.DataArray(np.asarray([max_lat,max_rate_lat_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
+
     
     if do_make_sym:
         return max_rate, max_rate_lat, max_lat
