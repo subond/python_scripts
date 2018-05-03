@@ -1,0 +1,542 @@
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+/scratch/rg419/envs/py36/lib/python3.6/site-packages/dask/array/numpy_compat.py:45: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)

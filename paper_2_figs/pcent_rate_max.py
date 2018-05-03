@@ -13,108 +13,151 @@ from pylab import rcParams
 from data_handling_updates import make_sym
 
 
-def p_cent_rate_max(runs, days=None):
+def precip_load_and_reshape(run, months=[121,181], period_fac=1.):
+    '''Load and reshape multi-year data into year/day of year shape'''
+    name_temp = '/scratch/rg419/Data_moist/' + run + '/run%04d/plev_pentad.nc'
+    names = [name_temp % m for m in range( months[0], months[1])  ]
+    
+    #read data into xarray 
+    data = xr.open_mfdataset( names,
+        decode_times=False,  # no calendar so tell netcdf lib
+        # choose how data will be broken down into manageable chunks.
+        chunks={'time': 30})
+    
+    try:
+        data = data.condensation_rain + data.convection_rain
+    except:
+        data = data.precipitation
+    
+    # Reshape to have dimensions ('year_no', 'xofyear', 'lat', 'lon')
+    data.coords['xofyear'] = np.mod( data.time - 1., 360.*period_fac) //5 + 1.  
+    
+    year_no = np.repeat(np.arange(40.), 72)
+    year_no = (data.time * 0.) + year_no[0: data.time.values.size]
+    data.coords['year_no'] = year_no
+    
+    data_rs = data.set_index(time = ['year_no', 'xofyear'])
+    data_rs = data_rs.unstack('time')
+    
+    data_rs = xr.Dataset({'precipitation': data_rs}, coords=data_rs.coords)
+    data_rs = data_rs.transpose('year_no', 'xofyear', 'lat', 'lon')
+
+    return data_rs
+    
+
+def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1.):
     # Get the maximum rate of change of the precipitation centroid latitude, and the latitude at which this occurs.
     
+    # Ensure runs is a list not a string
+    if not isinstance(runs,list):
+        runs=[runs]
+    # Set up empty lists
     max_rate = []
     max_rate_lat = []
     max_lat = []
+    if not do_make_sym: # If we're not averaging both hemispheres, get southern peak magnitude and location too
+        max_rate_s = []
+        max_rate_lat_s = []
+        max_lat_s = []
+    
     if days==None:
         days=[False]*len(runs)
         
     j=0
-    for run in runs:
-        # Open dataset
-        data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
-        
-        # Get total precip
-        try:
-            data['precipitation'] = data.condensation_rain + data.convection_rain
-        except:
-            data['precipitation'] = data.precipitation
-        
-        data['precipitation'] = make_sym(data.precipitation)
+    for run in runs: 
+        if months==None:   # If no months provided, look for a climatology
+            # Open dataset
+            data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+            # Get total precip
+            try:
+                data['precipitation'] = data.condensation_rain + data.convection_rain
+            except:
+                data['precipitation'] = data.precipitation
+        else: # If months are provided, load the data for these, and reshape to years/day of year
+            data = precip_load_and_reshape(run, months=months, period_fac=period_fac)
+        if do_make_sym: # If symmetric data is wanted, average over both hemispheres (NB currently only set up for a climatology 2/05/18)
+            data['precipitation'] = make_sym(data.precipitation)
 
         # Locate precipitation centroid
         precip_centroid(data)
-            
+        
         # Get rate of movement of precip centroid
         if days[j]:
             dpcentdt = gr.ddt(data.p_cent, secperunit = 86400.) * 86400.
         else:
             dpcentdt = gr.ddt(data.p_cent) * 86400.
+                
         
-        pcent_max = data.p_cent.max('xofyear')            
-    
+        def get_max(dpcentdt_pmask, sh=False):  # Function to find the maximum ratea and it's latitude and the maximum latitude.
+            dpcentdt_max = dpcentdt_pmask.where(dpcentdt_pmask==dpcentdt_pmask.max('xofyear'),drop=True)   # Find the maximum rate
+            numdims = len(dpcentdt_max.shape) # Check if this is just 1 year or if it's many years
+            if numdims != 1: # If it's many years, evaluate the metrics for each year
+                dpdt_max_temp=[] #First set up empty lists
+                pcent_dtmax=[]
+                pcent_max=[]
+                for y in range(dpcentdt_max.shape[0]): # Loop over years
+                    if sh: #If it's the southern hemisphere, look for the min latitude of pcent, and make it positive
+                        pcent_max.append(-1.*data.p_cent.sel(year_no=y).min('xofyear'))
+                    else: # Otherwise look for the maximum latitude
+                        pcent_max.append(data.p_cent.sel(year_no=y).max('xofyear'))
+                    # Find the maximum rate for the given year, remove any nans that have been added. If there are multiple values, use the smallest
+                    dpdt_max_temp.append(dpcentdt_max[y,:].dropna('xofyear')[0])
+                    # Find the location of the max rate for that year
+                    pcent_dtmax.append(data.p_cent.sel(year_no=y,xofyear=dpdt_max_temp[y].xofyear.values))
+                # Convert all results to datarrays
+                pcent_dtmax = xr.DataArray(np.asarray(pcent_dtmax), coords=[data.year_no.values], dims=['year_no'])
+                dpcentdt_max = xr.DataArray(np.asarray(dpdt_max_temp), coords=[data.year_no.values], dims=['year_no'])
+                pcent_max = xr.DataArray(np.asarray(pcent_max), coords=[data.year_no.values], dims=['year_no'])
+            
+            else: # If it's only 1D
+                if len(dpcentdt_max) > 1: # If there are multiple values for the maximum take the smallest
+                    dpcentdt_max = dpcentdt_max[0]
+                if sh: # If it's the southern hemisphere find the min lat of pcent, and make it positive
+                    pcent_max = -1.*data.p_cent.min('xofyear')
+                else: # Otherwise find the maximum latitude
+                    pcent_max = data.p_cent.max('xofyear')
+                pcent_dtmax = data.p_cent.sel(xofyear=dpcentdt_max.xofyear)    # Find the location of the preciptiation when the rate is maximum
+
+            return dpcentdt_max, pcent_dtmax, pcent_max
+        
+        
         dpcentdt_ppos = dpcentdt.where(data.p_cent>=0.)   # Find precip centroid rate where precip centroid is in the northern hemisphere
-        dpcentdt_max = dpcentdt_ppos.where(dpcentdt_ppos==dpcentdt_ppos.max(),drop=True)   # Find the maximum of the above
-        if len(dpcentdt_max) > 1:
-            dpcentdt_max = dpcentdt_max[0]
-        pcent_dtmax = data.p_cent.sel(xofyear=dpcentdt_max.xofyear)    # Find the location of the preciptiation when the rate is maximum
-        
-        print(dpcentdt_max.values, pcent_dtmax.values)     # Print both
-        
-        max_rate.append(dpcentdt_max)
+        dpcentdt_max, pcent_dtmax, pcent_max = get_max(dpcentdt_ppos) # Get the maximum etc
+        max_rate.append(dpcentdt_max) # Add values to lists for different runs
         max_rate_lat.append(pcent_dtmax)
         max_lat.append(pcent_max)
         
-        j=j+1
+        if not do_make_sym:
+            dpcentdt_pneg = -1.*dpcentdt.where(data.p_cent<=0.)   # Find precip centroid rate where precip centroid is in the southern hemisphere, and make poleward positive
+            dpcentdt_max_s, pcent_dtmax_s, pcent_max_s = get_max(dpcentdt_pneg, sh=True) # Get the maximum etc
+            max_rate_s.append(dpcentdt_max_s) # Add values to lists for different runs
+            max_rate_lat_s.append(-1.*pcent_dtmax_s)
+            max_lat_s.append(pcent_max_s)
+        
+        j=j+1 # Add 1 to counter to get values for next run
     
+    # Convert all output to arrays
     max_rate = np.asarray(max_rate)
     max_rate_lat = np.asarray(max_rate_lat)
     max_lat = np.asarray(max_lat)
     
-    return max_rate, max_rate_lat, max_lat
-    
-    
+    if do_make_sym:
+        return max_rate, max_rate_lat, max_lat
+    else:
+        max_rate_s = np.asarray(max_rate_s)
+        max_rate_lat_s = np.asarray(max_rate_lat_s)
+        max_lat_s = np.asarray(max_lat_s)
+        return max_rate, max_rate_lat, max_lat, max_rate_s, max_rate_lat_s, max_lat_s
+        
 
 if __name__ == "__main__":
-    
-    # Set plotting directory
-    plot_dir = '/scratch/rg419/plots/paper_2_figs/'
-    mkdir = sh.mkdir.bake('-p')
-    mkdir(plot_dir)
-    
 
-    rcParams['figure.figsize'] = 5, 6
-    rcParams['font.size'] = 16
+    max_rate_av, max_rate_lat_av, max_lat_av = p_cent_rate_max(['sn_1.000'])
+    max_rate, max_rate_lat, max_lat, max_rate_s, max_rate_lat_s, max_lat_s = p_cent_rate_max(['sn_1.000'], do_make_sym=False, months=[121,481])
     
-    runs = ['rt_0.500', 'rt_0.750', 'sn_1.000',
-            'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
-    
-    runs_5 = ['rt_0.750_5', 'mld_5', 'rt_1.250_5']
-    
-    runs_15 = ['rt_0.750_15', 'mld_15', 'rt_1.250_15']
-    
-    fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    max_rate, max_rate_lat, max_lat = p_cent_rate_max(runs)
-    max_rate_5,  max_rate_lat_5, max_lat_5 = p_cent_rate_max(runs_5)
-    max_rate_15, max_rate_lat_15, max_lat_15 = p_cent_rate_max(runs_15)
-    
-    ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat, 'xk', mew=2, ms=10)
-    ax1.plot([0.75, 1., 1.25], max_rate_lat_5, 'xb', mew=2, ms=10)
-    ax1.plot([0.75, 1., 1.25], max_rate_lat_15, 'xr', mew=2, ms=10)
-    ax1.set_xscale('log')
-    ax1.set_yscale('log')
-    ax1.set_ylabel('Lat. of max rate')
-    
-    ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat, 'xk', mew=2, ms=10)
-    ax2.plot([0.75, 1., 1.25], max_lat_5, 'xb', mew=2, ms=10)
-    ax2.plot([0.75, 1., 1.25], max_lat_15, 'xr', mew=2, ms=10)
-    ax2.set_xlabel('')
-    #ax2.set_ylim([0,1.1])
-    #ax2.set_yticks([0,0.25,0.5,0.75])
-    ax2.set_xscale('log')
-    ax2.set_yscale('log')
-    ax2.set_ylabel('Amplitude')
-    
-    ax2.set_xlabel('$\Omega$/$\Omega_{E}$')
-    
-    plt.subplots_adjust(right=0.95, left=0.2, top=0.95, bottom=0.1, hspace=0.15)
-    
-    plt.savefig(plot_dir + 'rotation_scatter_log.pdf', format='pdf')
-    plt.close()
-    
+    print (max_rate_av, (np.mean(max_rate) + np.mean(max_rate_s))/2.)
+    print (max_rate_lat_av, (np.mean(max_rate_lat) + np.mean(max_rate_lat_s))/2.)
+    print (max_lat_av, (np.mean(max_lat) + np.mean(max_lat_s))/2.)
     
     
     

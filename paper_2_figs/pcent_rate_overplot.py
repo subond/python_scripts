@@ -159,10 +159,13 @@ if __name__ == "__main__":
     set_plot_features(ax3, title='Varying MLDs', legend_labels=['2.5', '5.', '10.', '15.', '20.'], leg_title='MLD (m)')
     
     # Fourth subplot - rotation rates
+    #runs = ['rt_0.500_15','rt_0.750_15', 'mld_15', 
+    #         'rt_1.250_15','rt_1.500_15','rt_1.750_15','rt_2.000_15']
     runs = ['rt_0.500', 'rt_0.750', 'sn_1.000', 
             'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
     j=0
     for i in range(0,7):
+        #if runs[i] == 'mld_15':
         if runs[i] == 'sn_1.000':
             p_cent_grad_scatter(runs[i], color='k', ax=ax4, linewidth=2.)    
         else:

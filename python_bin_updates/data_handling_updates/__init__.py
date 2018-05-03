@@ -7,4 +7,4 @@ from .ellipses import *
 from .gradients import *
 from .cell_area import cell_area
 from .model_constants import *
-from .make_sym import make_sym
+from .make_sym import make_sym, flip_field
