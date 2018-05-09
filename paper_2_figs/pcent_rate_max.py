@@ -15,7 +15,7 @@ from data_handling_updates import make_sym
 
 def precip_load_and_reshape(run, months=[121,181], period_fac=1.):
     '''Load and reshape multi-year data into year/day of year shape'''
-    name_temp = '/scratch/rg419/Data_moist/' + run + '/run%04d/plev_pentad.nc'
+    name_temp = '/Users/ruthgeen/mnt/scratch/Data_moist/' + run + '/run%04d/plev_pentad.nc'
     names = [name_temp % m for m in range( months[0], months[1])  ]
     
     #read data into xarray 
@@ -69,7 +69,7 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
     for run in runs: 
         if months==None:   # If no months provided, look for a climatology
             # Open dataset
-            data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+            data = xr.open_dataset('/Users/ruthgeen/mnt/scratch/Data_moist/climatologies/' + run + '.nc')
             # Get total precip
             try:
                 data['precipitation'] = data.condensation_rain + data.convection_rain

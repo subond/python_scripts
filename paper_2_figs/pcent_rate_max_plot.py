@@ -18,7 +18,7 @@ import statsmodels.api as sm
 if __name__ == "__main__":
     
     # Set plotting directory
-    plot_dir = '/scratch/rg419/plots/paper_2_figs/'
+    plot_dir = '/Users/ruthgeen/Documents/plots/paper_2_figs/'
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
@@ -38,8 +38,8 @@ if __name__ == "__main__":
     
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     max_rate, max_rate_lat, max_lat = p_cent_rate_max(runs)
-    max_rate_5,  max_rate_lat_5, max_lat_5 = p_cent_rate_max(runs_5)
-    max_rate_15, max_rate_lat_15, max_lat_15 = p_cent_rate_max(runs_15)
+    #max_rate_5,  max_rate_lat_5, max_lat_5 = p_cent_rate_max(runs_5)
+    #max_rate_15, max_rate_lat_15, max_lat_15 = p_cent_rate_max(runs_15)
     
     rots = np.array([0.5,0.75,1.,1.25,1.5,1.75,2.])
     A = np.array([ np.log(rots), np.ones(rots.shape) ])
@@ -56,16 +56,16 @@ if __name__ == "__main__":
     
         
     ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat.values, 'xk', mew=2, ms=10)
-    ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat_5.values, 'xb', mew=2, ms=10)
-    ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat_15.values, 'xr', mew=2, ms=10)
+    #ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat_5.values, 'xb', mew=2, ms=10)
+    #ax1.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_rate_lat_15.values, 'xr', mew=2, ms=10)
     ax1.plot(rots, line,'k')
     #ax1.set_xscale('log')
     #ax1.set_yscale('log')
     ax1.set_ylabel('Lat. of max rate')
     
     ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat.values, 'xk', mew=2, ms=10)
-    ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat_5.values, 'xb', mew=2, ms=10)
-    ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat_15.values, 'xr', mew=2, ms=10)
+    #ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat_5.values, 'xb', mew=2, ms=10)
+    #ax2.plot([0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.], max_lat_15.values, 'xr', mew=2, ms=10)
     ax2.set_xlabel('')
     #ax2.set_ylim([0,1.1])
     #ax2.set_yticks([0,0.25,0.5,0.75])

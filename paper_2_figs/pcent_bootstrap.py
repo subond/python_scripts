@@ -86,25 +86,25 @@ def bootstrap_method(data, days=False):
 
 if __name__ == "__main__":
     
-    data = get_data('sn_1.000')
-    max_rate, max_rate_lat, max_lat = bootstrap_method(data)
-    np.save('sn_1_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
+    #data = get_data('sn_1.000')
+    #max_rate, max_rate_lat, max_lat = bootstrap_method(data)
+    #np.save('sn_1_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
     
-    data = get_data('sn_0.500', period_fac=0.5, months=[121,300])
-    max_rate, max_rate_lat, max_lat = bootstrap_method(data)
-    np.save('sn_p5_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
+    #data = get_data('sn_0.500', period_fac=0.5, months=[121,300])
+    #max_rate, max_rate_lat, max_lat = bootstrap_method(data)
+    #np.save('sn_p5_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
     
-    data = get_data('rt_0.500')
-    max_rate, max_rate_lat, max_lat = bootstrap_method(data)
-    np.save('rt_p5_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
+    #data = get_data('rt_0.500')
+    #max_rate, max_rate_lat, max_lat = bootstrap_method(data)
+    #np.save('rt_p5_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
     
-    data = get_data('rt_0.750')
-    max_rate, max_rate_lat, max_lat = bootstrap_method(data)
-    np.save('rt_p75_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
+    #data = get_data('rt_0.750')
+    #max_rate, max_rate_lat, max_lat = bootstrap_method(data)
+    #np.save('rt_p75_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
     
-    data = get_data('rt_1.250')
-    max_rate, max_rate_lat, max_lat = bootstrap_method(data)
-    np.save('rt_p5_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
+    #data = get_data('rt_1.250')
+    #max_rate, max_rate_lat, max_lat = bootstrap_method(data)
+    #np.save('rt_1p25_bootstrap',np.array([max_rate,max_rate_lat,max_lat]))
     
     data = get_data('rt_1.500')
     max_rate, max_rate_lat, max_lat = bootstrap_method(data)

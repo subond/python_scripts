@@ -26,7 +26,7 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.], res=0.01):
                lat_bound = lat range to integrate over
                lonin = longitude range to use'''
     
-    area = cell_area(42, '/scratch/rg419/GFDL_model/GFDLmoistModel/')   # Area of grid cells
+    area = cell_area(42, '/Users/ruthgeen/mnt/scratch/GFDL_model/GFDLmoistModel/')   # Area of grid cells
     
     # Add area to dataset
     data['area'] = (('lat','lon'), area)
