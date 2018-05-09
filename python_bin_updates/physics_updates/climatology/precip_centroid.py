@@ -21,7 +21,7 @@ def pick_lons(data, lonin):
     return lons
     
     
-def precip_centroid(data, lat_bound=45., lonin=[-1.,361.]):
+def precip_centroid(data, lat_bound=45., lonin=[-1.,361.], res=0.01):
     '''Inputs: data = input DataSet
                lat_bound = lat range to integrate over
                lonin = longitude range to use'''
@@ -47,7 +47,7 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.]):
     
     # Interpolate precip in latitude    
     f = spint.interp1d(lats, precip_area_lats, axis=-1, fill_value='extrapolate', kind='quadratic')
-    lats_new = np.arange(-lat_bound, lat_bound+0.1, 0.1)
+    lats_new = np.arange(-lat_bound, lat_bound+res, res)
     p_new = f(lats_new)
     
     # Determine the time dimensions of p_new and create DataArray

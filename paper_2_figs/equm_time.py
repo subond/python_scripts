@@ -13,6 +13,7 @@ from pylab import rcParams
 from hadley_cell import mass_streamfunction
 from data_handling_updates import cell_area#, rolling_mean
 import sys
+import statsmodels.api as sm
 
 
 def sf_spinup(run, months_list, filenames=['plev_pentad']):
@@ -51,28 +52,62 @@ def sf_spinup(run, months_list, filenames=['plev_pentad']):
     temp = sys.stderr                 # store original stdout object for later
     sys.stderr = open('log.txt', 'w') # redirect all prints to this log file
     
-    psi_mean = psi_mean.rolling(time=90).mean()
+    #psi_mean = psi_mean.rolling(time=60).mean()
+    #adj_time_70 = np.min(psi_mean.time.where(psi_mean >= 70.,drop=True).values)
+    adj_time = np.min(psi_mean.time.where(psi_mean >= 74.,drop=True).values)
+    #adj_time_75 = np.min(psi_mean.time.where(psi_mean >= 75.,drop=True).values)
     
     sys.stderr.close()                # ordinary file object
     sys.stderr = temp
     
-    return psi_mean
+    
+    return psi_mean, adj_time
+
+mlds = np.array([2.5,5.,10.,15.,20.])
+adj_time_all = np.array([2292.5,2467.5,2642.5,2887.5,3192.5])-1800.
 
     
-#sf_spinup('ss_eq_20', [[1,61]], filenames=['plev_monthly'])
-#sf_spinup('ss_eq_20', [[1,61],[61,121]], filenames=['plev_monthly','plev_pentad'])
-psi_2p5 = sf_spinup('ss_eq_2.5', [[61,121]], filenames=['plev_pentad'])
-psi_5 = sf_spinup('ss_eq_5', [[61,121]], filenames=['plev_pentad'])
-psi_10 = sf_spinup('ss_eq_10', [[61,121]], filenames=['plev_pentad'])
-psi_15 = sf_spinup('ss_eq_15', [[61,121]], filenames=['plev_pentad'])
-psi_20 = sf_spinup('ss_eq_20', [[61,121]], filenames=['plev_pentad'])
+A = np.array([ mlds, np.ones(mlds.shape) ])
 
-psi_2p5.plot.line()
-psi_5.plot.line()
-psi_10.plot.line()
-psi_15.plot.line()
-psi_20.plot.line()
-plt.ylim([60,80])
-plt.yticks(range(60,81,2))
+model = sm.OLS(adj_time_all, A.T)
+result=model.fit()
+consts = result.params
+std_err = result.bse
+        
+print('=== Coeffs ===')
+print(consts[0], consts[1])
+print('=== Std Errs ===')
+print(2*std_err[0], 2*std_err[1])
+
+
+# Set plotting directory
+plot_dir = '/scratch/rg419/plots/paper_2_figs/'
+mkdir = sh.mkdir.bake('-p')
+mkdir(plot_dir)
+
+plt.plot(mlds, adj_time_all, 'xk', mew=2, ms=10)
+plt.plot(mlds, mlds * consts[0] + consts[1],'k')
+plt.savefig(plot_dir + 'adj_time.pdf', format='pdf')
+plt.close()
+
+#sf_spinup('ss_eq_20', [[1,61]], filenames=['plev_monthly'])
+psi_sst, adj_time = sf_spinup('ss_eq_sst', [[1,61],[61,121]], filenames=['plev_monthly','plev_pentad'])
+#psi_sst, adj_time = sf_spinup('ss_eq_sst', [[61,121]], filenames=['plev_pentad'])
+#psi_2p5, adj_time = sf_spinup('ss_eq_2.5', [[61,121]], filenames=['plev_pentad'])
+#psi_5, adj_time = sf_spinup('ss_eq_5', [[61,121]], filenames=['plev_pentad'])
+#psi_10, adj_time = sf_spinup('ss_eq_10', [[61,121]], filenames=['plev_pentad'])
+#psi_15, adj_time = sf_spinup('ss_eq_15', [[61,121]], filenames=['plev_pentad'])
+#psi_20, adj_time = sf_spinup('ss_eq_20', [[61,121]], filenames=['plev_pentad'])
+
+psi_sst.plot.line()
+#psi_2p5.plot.line()
+#psi_5.plot.line()
+#psi_10.plot.line()
+#psi_15.plot.line()
+#psi_20.plot.line()
+plt.xlim([1700,1900])
+#plt.ylim([60,80])
+#plt.yticks(range(60,81,2))
 plt.grid(True,linestyle=':')
-plt.show()
+plt.savefig(plot_dir + 'psi_sst_short.pdf', format='pdf')
+plt.close()

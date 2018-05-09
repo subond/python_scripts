@@ -103,6 +103,8 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
                 pcent_max=[]
                 for y in range(dpcentdt_max.shape[0]): # Loop over years
                     if sh: #If it's the southern hemisphere, look for the min latitude of pcent, and make it positive
+                        #data.p_cent.sel(year_no=y).plot()
+                        #plt.show()
                         pcent_max.append(-1.*data.p_cent.sel(year_no=y).min('xofyear'))
                     else: # Otherwise look for the maximum latitude
                         pcent_max.append(data.p_cent.sel(year_no=y).max('xofyear'))
@@ -117,7 +119,7 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
             
             else: # If it's only 1D
                 if len(dpcentdt_max) > 1: # If there are multiple values for the maximum take the smallest
-                    dpcentdt_max = dpcentdt_max[0]
+                    dpcentdt_max  = dpcentdt_max[0].expand_dims('xofyear',axis=0) 
                 if sh: # If it's the southern hemisphere find the min lat of pcent, and make it positive
                     pcent_max = -1.*data.p_cent.min('xofyear')
                 else: # Otherwise find the maximum latitude
@@ -148,7 +150,6 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
             coords_yrno = ['clim']
         else:
             coords_yrno = data.year_no.values
-            
         max_rate = xr.DataArray(np.asarray(max_rate), coords=[runs,coords_yrno], dims=['run','year_no'])
         max_rate_lat = xr.DataArray(np.asarray(max_rate_lat), coords=[runs,coords_yrno], dims=['run','year_no'])
         max_lat = xr.DataArray(np.asarray(max_lat), coords=[runs,coords_yrno], dims=['run','year_no'])
@@ -158,36 +159,22 @@ def p_cent_rate_max(runs, do_make_sym=True, months=None, days=None, period_fac=1
             coords_yrno = ['clim']
         else:
             coords_yrno = data.year_no.values
-        print(np.asarray([max_rate,max_rate_s]))
-        max_rate = xr.DataArray(np.asarray([max_rate,max_rate_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
-        max_rate_lat = xr.DataArray(np.asarray([max_rate_lat,max_rate_lat_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
-        max_lat = xr.DataArray(np.asarray([max_lat,max_rate_lat_s]), coords=[runs,coords_yrno], dims=['run','year_no'])
+        max_rate = (xr.DataArray(np.asarray([max_rate,max_rate_s]), coords=[['n','s'],runs,coords_yrno], dims=['hemisphere','run','year_no'])).transpose('run','year_no','hemisphere')
+        max_rate_lat = (xr.DataArray(np.asarray([max_rate_lat,max_rate_lat_s]), coords=[['n','s'],runs,coords_yrno], dims=['hemisphere','run','year_no'])).transpose('run','year_no','hemisphere')
+        max_lat = (xr.DataArray(np.asarray([max_lat,max_lat_s]), coords=[['n','s'],runs,coords_yrno], dims=['hemisphere','run','year_no'])).transpose('run','year_no','hemisphere')
 
     
-    if do_make_sym:
-        return max_rate, max_rate_lat, max_lat
-    else:
-        if months==None:
-            max_rate_s = xr.DataArray(np.asarray(max_rate_s), coords=[runs,['clim']], dims=['run','year_no'])
-            max_rate_lat_s = xr.DataArray(np.asarray(max_rate_lat_s), coords=[runs,['clim']], dims=['run','year_no'])
-            max_lat_s = xr.DataArray(np.asarray(max_lat_s), coords=[runs,['clim']], dims=['run','year_no'])
-        else:
-            max_rate_s = xr.DataArray(np.asarray(max_rate_s), coords=[runs,data.year_no.values], dims=['run','year_no'])
-            max_rate_lat_s = xr.DataArray(np.asarray(max_rate_lat_s), coords=[runs,data.year_no.values], dims=['run','year_no'])
-            max_lat_s = xr.DataArray(np.asarray(max_lat_s), coords=[runs,data.year_no.values], dims=['run','year_no'])
-        return max_rate, max_rate_lat, max_lat, max_rate_s, max_rate_lat_s, max_lat_s
+    return max_rate, max_rate_lat, max_lat
+
         
 
 if __name__ == "__main__":
-
-    max_rate_av, max_rate_lat_av, max_lat_av = p_cent_rate_max(['sn_1.000', 'sn_0.500'])
-    #max_rate, max_rate_lat, max_lat, max_rate_s, max_rate_lat_s, max_lat_s = p_cent_rate_max(['sn_1.000'], do_make_sym=False,period_fac=1., months=[121,481])
-    max_rate, max_rate_lat, max_lat, max_rate_s, max_rate_lat_s, max_lat_s = p_cent_rate_max(['sn_1.000','sn_0.500'], do_make_sym=False,period_fac=[1.,0.5], months=[[121,481],[121,301]])
     
-    #print (max_rate_av, (np.mean(max_rate) + np.mean(max_rate_s))/2.)
-    #print (max_rate_lat_av, (np.mean(max_rate_lat) + np.mean(max_rate_lat_s))/2.)
-    #print (max_lat_av, (np.mean(max_lat) + np.mean(max_lat_s))/2.)
+    max_rate_av, max_rate_lat_av, max_lat_av = p_cent_rate_max(['rt_0.500', 'rt_0.750', 'sn_1.000','rt_1.250', 'rt_1.500', 'rt_1.750'])
+    max_rate, max_rate_lat, max_lat = p_cent_rate_max(['sn_1.000'], do_make_sym=False,period_fac=1., months=[121,481])
+    max_rate, max_rate_lat, max_lat = p_cent_rate_max(['sn_1.000','sn_0.500'], do_make_sym=False,period_fac=[1.,0.5], months=[[121,481],[121,301]])
     
-    
-    
+    print (max_rate_av.values, max_rate.mean(('hemisphere','year_no')).values)
+    print (max_rate_lat_av.values, max_rate_lat.mean(('hemisphere','year_no')).values)
+    print (max_lat_av.values, max_lat.mean(('hemisphere','year_no')).values)
     
