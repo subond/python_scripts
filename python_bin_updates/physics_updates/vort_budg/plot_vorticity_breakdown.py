@@ -21,7 +21,8 @@ from hadley_cell import mass_streamfunction
 
 
 plot_dir = '/scratch/rg419/plots/vorticity_eq_clean/'
-
+mkdir = sh.mkdir.bake('-p')
+mkdir(plot_dir)
 
 def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_only=False, no_eddies=False, ll=False):
     '''Evaluate pentad mean vorticity budget and differences from daily snapshot budget RG 3/11/2017
@@ -35,10 +36,10 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
     
     
     #Load in vorticity budget term means
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/vort_eq_'+run+'.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/vort_eq_'+run+'.nc')
     if run in ['ap_2', 'full_qflux']:
         data_vort = data 
-        data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/vort_eq_uv'+run+'.nc')
+        data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/vort_eq_uv'+run+'.nc')
         
     print('vorticity budget data loaded')
     
@@ -175,7 +176,7 @@ def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labe
     
     
     if add_psi:
-        data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+        data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
         if lonin[1]>lonin[0]:
             lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
         else:
@@ -244,7 +245,7 @@ def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labe
     ax4.set_title('Vortex stretching', fontsize=17)
     ax4.text(-15, 60, 'd)')
     
-    ds.div.plot.contourf(x='xofyear', y='lat', levels=np.arange(-0.6,0.7,0.1), ax=ax5, extend = 'both', add_labels=False)
+    ds.div.plot.contourf(x='xofyear', y='lat', levels=np.arange(-1.,1.1,0.1), ax=ax5, extend = 'both', add_labels=False)
     ax5.set_title('Divergence', fontsize=17)
     ax5.text(-7, 60, 'e)')
     
@@ -548,7 +549,7 @@ if __name__ == "__main__":
     #vort_eq_hm('full_qflux', lonin=[60.,150.])
     #vort_eq_hm('full_qflux', lonin=[60.,150.], planetary_only=True)
     
-    #vort_eq_hm('ap_2')
+    vort_eq_hm('ap_2')
     #vort_eq_hm('ap_2', planetary_only=True)
     vort_eq_hm('sn_1.000')
     #vort_eq_hm('sn_1.000', planetary_only=True)

@@ -16,7 +16,7 @@ def time_means(run_fol, months, filename='atmos_daily', timeav='day', period_fac
         print ('WARNING: Non Dec end point')
     
     try:
-        name_temp = '/scratch/rg419/Data_moist/' + run_fol + '/run%03d/'+filename+'.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run_fol + '/run%03d/'+filename+'.nc'
         names = [name_temp % m for m in range( months[0], months[1])  ]
     
         #print names
@@ -26,7 +26,7 @@ def time_means(run_fol, months, filename='atmos_daily', timeav='day', period_fac
             # choose how data will be broken down into manageable chunks.
             chunks={'time': 30})
     except:
-        name_temp = '/scratch/rg419/Data_moist/' + run_fol + '/run%04d/'+filename+'.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run_fol + '/run%04d/'+filename+'.nc'
         names = [name_temp % m for m in range( months[0], months[1])  ]
     
         #print names
@@ -40,27 +40,27 @@ def time_means(run_fol, months, filename='atmos_daily', timeav='day', period_fac
     if timeav == '6hour':
         rundata.coords['xofyear'] = np.mod( rundata.time, 8640.*period_fac) 
         data = rundata.groupby('xofyear').mean(('time'))   
-        filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'_6hour.nc'
+        filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'_6hour.nc'
     if timeav == 'day':
         #rundata.coords['xofyear'] = np.mod( rundata.time/day_fac -1., 360.*period_fac) + 0.5 
         rundata.coords['xofyear'] = np.mod( rundata.time/day_fac , 360.*period_fac) + 0.5 
         print (rundata.xofyear.values)
         data = rundata.groupby('xofyear').mean(('time'))
-        filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'_day.nc'
+        filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'_day.nc'
     elif timeav =='pentad':
         rundata.coords['xofyear'] = np.mod( rundata.time/day_fac - 1., 360.*period_fac) //5 + 1.  
         print (rundata.xofyear.values)
         data = rundata.groupby('xofyear').mean(('time'))        
-        filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'.nc'
+        filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'.nc'
     elif timeav =='month':
         rundata.coords['xofyear'] = np.mod( rundata.time/day_fac, 360.*period_fac) //30 + 1     
         #print rundata.xofyear.values   
         data = rundata.groupby('xofyear').mean(('time'))
-        filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'_month.nc'
+        filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'_month.nc'
     elif timeav =='season':
         rundata.coords['xofyear'] = np.mod( np.floor( (np.mod( rundata.time/day_fac, 360.*period_fac) //(30*period_fac) + 1.)/3. ) , 4);
         data = rundata.groupby('xofyear').mean(('time'))
-        filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'_season.nc'
+        filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'_season.nc'
     else:
         'invalid timeav'
         return
@@ -84,7 +84,7 @@ def time_means(run_fol, months, filename='atmos_daily', timeav='day', period_fac
         data = data_interp
         
     if write_netcdf:
-        #filename = '/scratch/rg419/Data_moist/climatologies/'+run_fol+'_day.nc'
+        #filename = '/disca/share/rg419/Data_moist/climatologies/'+run_fol+'_day.nc'
         if name_out == None:
             data.to_netcdf(filename)
         else:

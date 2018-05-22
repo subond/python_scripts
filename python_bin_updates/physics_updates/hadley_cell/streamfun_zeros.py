@@ -64,11 +64,11 @@ def get_streamfun_zeros(data, lev=150., sanity_check=False):
     
 
 
-data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/rt_0.500.nc')
-get_streamfun_zeros(data)
+#data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/rt_0.500.nc')
+#get_streamfun_zeros(data)
 
-data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/sn_1.000.nc')
-get_streamfun_zeros(data)
+#data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/sn_1.000.nc')
+#get_streamfun_zeros(data)
 
-data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/rt_2.000.nc')
-get_streamfun_zeros(data)
+#data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/rt_2.000.nc')
+#get_streamfun_zeros(data)

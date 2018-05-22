@@ -20,12 +20,12 @@ def vort_eq(run, month, filename='plev_daily', period_fac=1., rot_fac=1., do_ss=
     
     #Load in dataset
     try:
-        name_temp = '/scratch/rg419/Data_moist/' + run + '/run%03d/'+filename+'.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run + '/run%03d/'+filename+'.nc'
         name = name_temp % month 
         #read data into xarr
         data = xr.open_dataset( name, decode_times=False)
     except:
-        name_temp = '/scratch/rg419/Data_moist/' + run + '/run%04d/'+filename+'.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run + '/run%04d/'+filename+'.nc'
         name = name_temp % month 
         #read data into xarr
         data = xr.open_dataset( name, decode_times=False)
@@ -77,15 +77,15 @@ def vort_eq(run, month, filename='plev_daily', period_fac=1., rot_fac=1., do_ss=
         dsout = ds.groupby('xofyear').mean(('time'))
     
     try:
-        fileout = '/scratch/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'  
+        fileout = '/disca/share/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'  
         fileout = fileout % month
         dsout.to_netcdf(path=fileout)
     except:
-        fileout = '/scratch/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'  
+        fileout = '/disca/share/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'  
         fileout = fileout % month
         dsout.to_netcdf(path=fileout)
     
-    print 'data written to ', fileout
+    print ('data written to ', fileout)
 
     return dsout
     
@@ -99,17 +99,17 @@ def save_vort_eq(run, months, do_ss=False):
     
     #Load in dataset
     try:
-        name_temp = '/scratch/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'
         names = [name_temp % m for m in range( months[0], months[1])  ]
         #read data into xarray 
         data = xr.open_mfdataset( names, decode_times=False)
     except:
-        name_temp = '/scratch/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'
+        name_temp = '/disca/share/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'
         names = [name_temp % m for m in range( months[0], months[1])  ]
         #read data into xarray 
         data = xr.open_mfdataset( names, decode_times=False)
     
-    print 'data loaded'
+    print ('data loaded')
     
     # If a steady state run, average over all times. Otherwise add a second pentad coordinate and use it to create a clmatology 
     if do_ss:
@@ -118,18 +118,18 @@ def save_vort_eq(run, months, do_ss=False):
         data.coords['pentad'] = data.coords['xofyear']
         dsout = data.groupby('pentad').mean(('xofyear'))
     
-    fileout = '/scratch/rg419/Data_moist/climatologies/vort_eq_' + run + '.nc'  
+    fileout = '/disca/share/rg419/Data_moist/climatologies/vort_eq_' + run + '.nc'  
     dsout.to_netcdf(path=fileout, format = 'NETCDF3_CLASSIC')
-    print 'data written to ', fileout
+    print ('data written to ', fileout)
 
 
 if __name__ == "__main__":
     
-    #rot_fac=[0.5,1.25,1.75,2.]
-    for run in ['sn_1_sst', 'sn_1_sst_zs', 'sine_sst_10m', 'sine_sst_10m_zs']:   
+    rot_fac=[0.75,1.,1.25,1.5]
+    for run in ['rt_0.750', 'sn_1.000', 'rt_1.250', 'rt_1.500']:   
         k=0
         for i in range(121,481):
-            vort_eq(run, i)
+            vort_eq(run, i, rot_fac=rot_fac[k])
         save_vort_eq(run, [121,481])
         k=k+1
         

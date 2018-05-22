@@ -26,7 +26,7 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.], res=0.01):
                lat_bound = lat range to integrate over
                lonin = longitude range to use'''
     
-    area = cell_area(42, '/scratch/rg419/GFDL_model/GFDLmoistModel/')   # Area of grid cells
+    area = cell_area(42, '/scratch/rg419/Isca/')   # Area of grid cells
     
     # Add area to dataset
     data['area'] = (('lat','lon'), area)
@@ -55,6 +55,8 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.], res=0.01):
         p_new = xr.DataArray(p_new, coords=[data.year_no.values, data.xofyear.values, lats_new], dims=['year_no', 'xofyear', 'lat'])
     elif 'xofyear' in data.coords:
         p_new = xr.DataArray(p_new, coords=[data.xofyear.values, lats_new], dims=['xofyear', 'lat'])
+    elif 'time' in data.coords:
+        p_new = xr.DataArray(p_new, coords=[data.time.values, lats_new], dims=['time', 'lat'])
     else:
         p_new = xr.DataArray(p_new, coords=[lats_new], dims=['lat'])
         
@@ -79,10 +81,21 @@ def precip_centroid(data, lat_bound=45., lonin=[-1.,361.], res=0.01):
             
     elif 'xofyear' in data.coords:
         p_cent = np.zeros((len(p_new.xofyear.values),))
-        for i in range(1,len(p_new.xofyear.values)+1):
-            p_cent[i-1] = p_new.lat[p_area_int.sel(xofyear=i) <= 0.5 * p_area_int.sel(xofyear=i).max('lat')].max('lat').values
+        j=0
+        for i in p_new.xofyear.values:
+            p_cent[j] = p_new.lat[p_area_int.sel(xofyear=i) <= 0.5 * p_area_int.sel(xofyear=i).max('lat')].max('lat').values
+            j=j+1
         
         p_cent= xr.DataArray(p_cent, coords=[p_new.xofyear.values], dims=['xofyear'])
+    
+    elif 'time' in data.coords:
+        p_cent = np.zeros((len(p_new.time.values),))
+        j=0
+        for i in p_new.time.values:
+            p_cent[j] = p_new.lat[p_area_int.sel(time=i) <= 0.5 * p_area_int.sel(time=i).max('lat')].max('lat').values
+            j=j+1
+        
+        p_cent= xr.DataArray(p_cent, coords=[p_new.time.values], dims=['time'])
     
     else:
         p_cent = p_new.lat[p_area_int <= 0.5 * p_area_int.max('lat')].max('lat').values
