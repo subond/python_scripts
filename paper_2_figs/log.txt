@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "equm_time.py", line 80, in <module>
+    pcent_sst, adj_time_sst = sf_spinup('ss_eq_sst', [[61,121]], filenames=['plev_pentad'])
+  File "equm_time.py", line 62, in sf_spinup
+    adj_time = np.min(psi_mean.time.where(data.p_cent >= 15.,drop=True).values)
+NameError: name 'psi_mean' is not defined

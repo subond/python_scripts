@@ -549,17 +549,20 @@ if __name__ == "__main__":
     #vort_eq_hm('full_qflux', lonin=[60.,150.])
     #vort_eq_hm('full_qflux', lonin=[60.,150.], planetary_only=True)
     
-    vort_eq_hm('ap_2')
     #vort_eq_hm('ap_2', planetary_only=True)
+    #vort_eq_hm('ob_40.000')
     vort_eq_hm('sn_1.000')
-    #vort_eq_hm('sn_1.000', planetary_only=True)
 
     #vort_eq_hm('rt_0.750', rot_fac=0.75)
     #vort_eq_hm('rt_1.500', rot_fac=1.5)
     
-    #vort_eq_hm('rt_0.500', rot_fac=0.5)
+    vort_eq_hm('rt_0.500', rot_fac=0.5)
+    vort_eq_hm('rt_0.750', rot_fac=0.75)
+    vort_eq_hm('rt_1.250', rot_fac=1.25)
+    vort_eq_hm('rt_1.500', rot_fac=1.5)
+    vort_eq_hm('rt_1.750', rot_fac=1.75)
     #vort_eq_hm('rt_0.500', planetary_only=True, rot_fac=0.5)
-    #vort_eq_hm('rt_2.000', rot_fac=2.)
+    vort_eq_hm('rt_2.000', rot_fac=2.)
     #vort_eq_hm('rt_2.000', planetary_only=True, rot_fac=2.)
 
     #vort_eq_hm('sine_sst_10m')

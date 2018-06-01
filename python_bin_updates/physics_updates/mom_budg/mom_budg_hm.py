@@ -89,7 +89,7 @@ def partition_advection(data, lons, lev=150):
     
     
     
-def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fac=1.,lonin=[-1.,361.], plot_precip=True):
+def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fac=1.,lonin=[-1.,361.], plot_precip=True, rot_fac=1.):
     
     rcParams['figure.figsize'] = 12, 8
     rcParams['font.size'] = 18
@@ -110,7 +110,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     partition_advection(data, lons, lev=150)
     
     #Coriolis
-    omega = 7.2921150e-5
+    omega = 7.2921150e-5 * rot_fac
     f = 2 * omega * np.sin(data.lat *np.pi/180)
     fv = data.vcomp.sel(pfull=lev) * f * 86400.
     fv_mean = fv.mean('lon')
@@ -144,6 +144,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     mom_sum = fv_local + fv_mean + dphidx + mom_mean + mom_trans + mom_stat + mom_cross
     
     levels = np.arange(-20,21.1,2.)
+    levels = np.arange(-2,2.1,0.2)
     
     mn_dic = month_dic(1)
     tickspace = list(range(13,72,18))
@@ -193,14 +194,25 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
 
     
     if lonin == [-1.,361.]:
-        figname = 'zon_mom_budg_' +run+ '.pdf'
+        figname = 'zon_mom_budg_' +run+ '_zoom.pdf'
     else:
         figname = 'zon_mom_budg_' + run + '_' + str(int(lonin[0]))+ '_' + str(int(lonin[1])) + '.pdf'
     
     plt.savefig(plot_dir + figname, format='pdf')
     plt.close()
 
+#mom_budg_hm('rt_0.500', rot_fac=0.5)
+#mom_budg_hm('rt_0.750', rot_fac=0.75)
+#mom_budg_hm('sn_1.000')
+#mom_budg_hm('rt_1.250', rot_fac=1.25)
+#mom_budg_hm('rt_1.500', rot_fac=1.5)
+#mom_budg_hm('rt_1.750', rot_fac=1.75)
+#mom_budg_hm('rt_2.000', rot_fac=2.0)
+
+mom_budg_hm('sn_1.000')
+mom_budg_hm('sine_sst_10m')
 mom_budg_hm('sn_1_sst_zs')
+mom_budg_hm('sine_sst_10m_zs')
 #mom_budg_hm('ap10_qflux')
 #mom_budg_hm('ap10_co2')
 

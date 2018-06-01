@@ -169,9 +169,9 @@ if __name__ == "__main__":
     print('=== Std Errs ===')
     print(2.*std_err[0], 2*std_err[1])
     line = mlds*consts[0] + consts[1]
-    ax9.plot(mlds, max_lat_mld.values, 'xk', mew=2, ms=10)
-    ax9.plot(mlds, max_rate_lat_mld.values, 'xr', mew=2, ms=10)
-    ax9.plot(mlds, line,'k')
+    ax9.plot(mlds, max_lat_mld.values, 'xr', mew=2, ms=10)
+    ax9.plot(mlds, max_rate_lat_mld.values, 'xk', mew=2, ms=10)
+    ax9.plot(mlds, line,'r')
     ax9.set_ylabel('Latitude')
     ax9.set_xlabel('MLD, m')
     
@@ -195,6 +195,8 @@ if __name__ == "__main__":
             'sn_2.000', 'sn_3.000', 'sn_4.000']
     days = [True, False, False, False, False, False]
     max_rate_sn, max_rate_lat_sn, max_lat_sn = p_cent_rate_max(runs, days=days)
+    print('mld peak lat:', np.mean(max_rate_lat_mld[0:4].values), '+-', np.std(max_rate_lat_mld[0:4].values))
+    print('sn peak lat:', np.mean(max_rate_lat_sn[1:6].values), '+-', np.std(max_rate_lat_sn[1:6].values))
     dpdt_eq_sn = rate_at_eq(runs, days=days)
     # Set scaling factors for rate
     period_fac = [0.25, 0.5, 1., 2., 3., 4.]
@@ -218,8 +220,8 @@ if __name__ == "__main__":
     #ax5.set_xscale('log')
     #ax5.set_yscale('log')
     
-    ax7.plot(period_fac, max_lat_sn.values, 'xk', mew=2, ms=10)
-    ax7.plot(period_fac, max_rate_lat_sn.values, 'xr', mew=2, ms=10)
+    ax7.plot(period_fac, max_lat_sn.values, 'xr', mew=2, ms=10)
+    ax7.plot(period_fac, max_rate_lat_sn.values, 'xk', mew=2, ms=10)
     ax7.set_ylabel('Latitude')
     ax7.set_xlabel('P/P$_{E}$')
     #ax6.set_xscale('log')
@@ -251,14 +253,16 @@ if __name__ == "__main__":
     
     
     for ax in [ax1, ax2, ax3]:
-        ax.set_ylabel('P. cent. lat. rate')
+        ax.set_ylabel('ITCZ migration rate')
         ax.set_xlabel('Precip centroid lat.')
 
     for ax in [ax4, ax5, ax6]:
         ax.set_ylim([0,1])
+        ax.grid(True,linestyle=':')
     
-    for ax in [ax7, ax8]:
+    for ax in [ax7, ax9]:
         ax.set_ylim([0,25])
+        ax.grid(True,linestyle=':')
         
     ax8.axis('off') 
     

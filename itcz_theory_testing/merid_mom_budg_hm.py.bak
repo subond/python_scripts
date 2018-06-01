@@ -5,8 +5,9 @@ Evaluate and plot meridional momentum budget at 150 hPa
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
-from data_handling_updates import time_means, month_dic, gradients as gr
+from data_handling import time_means, month_dic
 import sh
+from physics import gradients as gr
 from pylab import rcParams
 
 # Budget: Dv/Dt + fu + dphi/dy = F
@@ -30,7 +31,7 @@ def partition_advection(data, lons, lev=150):
     data['v_dvdy_stat'] = (('xofyear','lat'), v_dvdy_stat)	
     data['v_dvdy_zav']  = (('xofyear','lat'), v_dvdy_zav )
     
-    print('vv terms done')
+    print 'vv terms done'
     
     #Do vw terms
     vw_trans_dp = -86400. * gr.ddp( (data.vcomp_omega - data.vcomp * data.omega).sel(lon=lons).mean('lon') )
@@ -45,7 +46,7 @@ def partition_advection(data, lons, lev=150):
     data['w_dvdp_stat'] = (('xofyear','lat'), w_dvdp_stat)	
     data['w_dvdp_zav']  = (('xofyear','lat'), w_dvdp_zav )	
     
-    print('vw terms done')
+    print 'vw terms done'
     
     
     
@@ -61,7 +62,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
         
-    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/'+run+'.nc')
+    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/'+run+'.nc')
     
     if lonin[1]>lonin[0]:
         lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
@@ -95,7 +96,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     levels = np.arange(-300.,300.1,30.)
     
     mn_dic = month_dic(1)
-    tickspace = list(range(13,72,18))
+    tickspace = range(13,72,18)
     labels = [mn_dic[(k+5)/6 ] for k in tickspace]
     
     # Six subplots

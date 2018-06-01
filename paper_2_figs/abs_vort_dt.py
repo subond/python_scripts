@@ -6,13 +6,27 @@ import xarray as xr
 import sh
 import numpy as np
 import matplotlib.pyplot as plt
-from data_handling_updates import gradients as gr, make_sym
+from data_handling_updates import gradients as gr, make_sym, cell_area
 from climatology import precip_centroid
 from pylab import rcParams
 import scipy.interpolate as spint
 from hadley_cell import mass_streamfunction
 
+def psi_mean_clim(run):
+    
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+    
+    psi = mass_streamfunction(data, a=6376.0e3, dp_in=50.)
+    psi /= 1.e9
+    
+    area = cell_area(42, '/scratch/rg419/Isca/')
+    area_xr = xr.DataArray(area, [('lat', data.lat ), ('lon', data.lon)])
+    area_xr = area_xr.mean('lon')
+    psi_mean = ((psi*area_xr).sum(('lat'))/area_xr.sum(('lat'))).mean('pfull')
+    #psi_mean = psi_mean*-1.
 
+    return psi_mean
+    
 def abs_vort_dt_plot(run, ax, rot_fac=1., lev=150., dvordt_flag=False):
     '''Plot dvordt or 1/vor * dvordt'''
     
@@ -34,6 +48,7 @@ def abs_vort_dt_plot(run, ax, rot_fac=1., lev=150., dvordt_flag=False):
     omega = 7.2921150e-5 * rot_fac
     f = 2 * omega * np.sin(data.lat *np.pi/180)
     vor = (v_dx - u_dy + f).sel(pfull=lev)*86400.
+
     vor = make_sym(vor, asym=True)
     
     # Take time derivative of absolute vorticity
@@ -131,7 +146,10 @@ def abs_vort_dt_at_pcent(run, rot_fac=1., lev=150.,lat_bound=45., res=0.01, inte
     omega = 7.2921150e-5 * rot_fac
     f = 2 * omega * np.sin(data.lat *np.pi/180)
     vor = (v_dx - u_dy + f)*86400.
+    div = gr.ddx(u_new) + gr.ddy(v_new)
+    stretching_mean = (-86400. * vor * div).mean('lon')
     vor = make_sym(vor, asym=True)
+    stretching_mean = make_sym(stretching_mean, asym=True)
     
     # Take time derivative of absolute vorticity
     if interp:
@@ -140,21 +158,26 @@ def abs_vort_dt_at_pcent(run, rot_fac=1., lev=150.,lat_bound=45., res=0.01, inte
         dvordt = gr.ddt(vor.mean('lon'))*86400.
     # Also normalise this by the value of vorticity
     dvordtvor = dvordt/vor.mean('lon')
+    #dvordtvor = stretching_mean/vor.mean('lon')
     
     # Interpolate vorticity in latitude to match precipitation centroid lats
     lats = [data.lat[i] for i in range(len(data.lat)) if data.lat[i] >= -lat_bound and data.lat[i] <= lat_bound]    
     lats_new = np.arange(-lat_bound, lat_bound+res, res)
+    stretching_mean = lat_interp(stretching_mean.sel(lat=lats), lats_new)
     dvordt = lat_interp(dvordt.sel(lat=lats), lats_new)
     dvordtvor = lat_interp(dvordtvor.sel(lat=lats), lats_new)
     
     # Get and return dvordt and dvordtvor at the precipitation centroid, as well as the precipitation centroid itself
+    st_pcent = [float(stretching_mean[i,:].sel(lat=data.p_cent.values[i]).values) for i in range(len(data.xofyear))]
+    st_pcent = xr.DataArray(np.asarray(st_pcent), coords=[stretching_mean.xofyear.values], dims=['xofyear'])
+
     dvordt_pcent = [float(dvordt[i,:].sel(lat=data.p_cent.values[i]).values) for i in range(len(data.xofyear))]
     dvordt_pcent = xr.DataArray(np.asarray(dvordt_pcent), coords=[dvordt.xofyear.values], dims=['xofyear'])
     
     dvordtvor_pcent = [float(dvordtvor[i,:].sel(lat=data.p_cent.values[i]).values) for i in range(len(data.xofyear))]
     dvordtvor_pcent = xr.DataArray(np.asarray(dvordtvor_pcent), coords=[dvordtvor.xofyear.values], dims=['xofyear'])
     
-    return dvordt_pcent, dvordtvor_pcent, data.p_cent
+    return dvordt_pcent, dvordtvor_pcent, data.p_cent, st_pcent
 
 
 def abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=None, lev=150., filename='abs_vort_dtvor_pcent', interp=True, dvordt=False, period_facs=None):
@@ -175,21 +198,24 @@ def abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=None, lev=150., filename='
         period_facs = [1.]*len(runs)
     
     for i in range(len(runs)):
-        dvordt_pcent, dvordtvor_pcent, pcent = abs_vort_dt_at_pcent(runs[i], rot_facs[i], interp=interp)
+        dvordt_pcent, dvordtvor_pcent, pcent, st_pcent = abs_vort_dt_at_pcent(runs[i], rot_facs[i], interp=interp)
         if interp:
             dpcentdt = gr.ddt(pcent)*86400.*5.*period_facs[i]
         else:
             dpcentdt = gr.ddt(pcent)*86400.*period_facs[i]
             
-        times = [dvordt_pcent.xofyear[j] for j in range(len(dvordt_pcent.xofyear)) if dvordt_pcent.xofyear[j] >= 42*period_facs[i] and dvordt_pcent.xofyear[j] <= 66*period_facs[i]]
+        times = [dvordt_pcent.xofyear[j] for j in range(len(dvordt_pcent.xofyear)) if dvordt_pcent.xofyear[j] >= 40*period_facs[i] and dvordt_pcent.xofyear[j] <= 55*period_facs[i]]
         #times = [dvordt_pcent.xofyear[i] for i in range(len(dvordt_pcent.xofyear)) if dvordt_pcent.xofyear[i] >= 0 and dvordt_pcent.xofyear[i] <= 10000]
         dvordtvor_pcent = dvordtvor_pcent.where(((dvordtvor_pcent < 0.02) & (dvordtvor_pcent > -0.04)))
         if dvordt:
-            ax.plot(dpcentdt.sel(xofyear=times), dvordt_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
+            #ax.plot(dpcentdt.sel(xofyear=times), dvordt_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
+            ax.plot(pcent.sel(xofyear=times), dvordt_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
             ax.set_ylabel('d$\zeta$/dt at precip. centroid')     
         else:
             ax.plot(dpcentdt.sel(xofyear=times), dvordtvor_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
+            #ax.plot(pcent.sel(xofyear=times), dvordtvor_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
             ax.set_ylim([-0.04,0.02])
+            #ax.set_ylim([-0.1,0.1])
             ax.set_ylabel('$1/\zeta$*d$\zeta$/dt at precip. centroid')
     
     ax.set_xlabel('ITCZ migration rate')
@@ -241,23 +267,29 @@ if __name__ == "__main__":
     # Start figure with 4 subplots
     fig, ((ax1), (ax2), (ax3)) = plt.subplots(3, 1)
     
-    abs_vort_dt_plot('sn_1.000', ax=ax1, dvordt_flag=True)
+    control = 'sn_1.000'
+    abs_vort_dt_plot(control, ax=ax1, dvordt_flag=True)
 
-    
-    dvordt_pcent, dvordtvor_pcent, p_cent =  abs_vort_dt_at_pcent('sn_1.000', interp=False)
+    psi_mean = psi_mean_clim(control)
+    dvordt_pcent, dvordtvor_pcent, p_cent, st_pcent =  abs_vort_dt_at_pcent(control, interp=False)
     dpcentdt = gr.ddt(p_cent)*86400.
     dpcentdt.plot(ax=ax2, color='k', linewidth=2)
+    #p_cent.plot(ax=ax2, color='k', linewidth=2)
+    
+    #dpsi_meandt = gr.ddt(psi_mean)*86400./5.
+    #dpsi_meandt.plot(ax=ax2, color='g', linewidth=2)
     
     ax2_twin = ax2.twinx()
+    #st_pcent.plot(ax=ax2_twin, color='b', linewidth=2)
     dvordt_pcent.plot(ax=ax2_twin, color='b', linewidth=2)
     box = ax2.get_position()
     ax2.set_position([box.x0, box.y0, box.width * 0.85, box.height])
     ax2.set_xlabel('Pentad')
-    ax2.set_ylabel('ITCZ migration rate')
+    ax2.set_ylabel('ITCZ latitude')
     ax2_twin.set_ylabel('d$\zeta$/dt at precip. centroid', color='b')
     ax2.set_xlim([0,72])
     ax2.set_xticks(np.arange(0,73,12))
-    ax2.set_yticks(np.arange(-0.6,0.7,0.2))
+    #ax2.set_yticks(np.arange(-30.,30.1,10.))
     ax2_twin.set_yticks(np.arange(-0.06,0.07,0.02))
     ax2_twin.spines['right'].set_color('blue')
     ax2_twin.yaxis.label.set_color('blue')
@@ -266,9 +298,14 @@ if __name__ == "__main__":
     
     colors=['b','g','k','r','c','m','y']
     runs = ['rt_0.500', 'rt_0.750', 'sn_1.000', 'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
-    rot_facs=[0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.]
+    #runs_5 = ['rt_0.500_5', 'rt_0.750_5', 'mld_5', 'rt_1.250_5', 'rt_1.500_5', 'rt_1.750_5', 'rt_2.000_5']        
+    #runs_15 = ['rt_0.500_15', 'rt_0.750_15', 'mld_15', 'rt_1.250_15', 'rt_1.500_15', 'rt_1.750_15', 'rt_2.000_15']
     
-    abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=ax3, interp=False)
+    rot_facs=[0.5, 0.75, 1., 1.25, 1.5, 1.75, 2.]
+    #rot_facs=[1.,1.,1.,1.,1.]
+    #runs = ['mld_2.5', 'mld_5', 'sn_1.000', 'mld_15', 'mld_20']
+    
+    abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=ax3, interp=False)#, dvordt=True)
     
     plt.subplots_adjust(left=0.17, right=0.8, top=0.97, bottom=0.05, hspace=0.3)
     

@@ -95,7 +95,7 @@ def rate_at_eq(runs, do_make_sym=True, days=None):
     return np.asarray(dpdt_eq)
     
     
-def set_plot_features(ax, title='', legend_labels=[], fontsize=10, leg_title=None):
+def set_plot_features(ax, title='', do_legend=True, legend_labels=[], fontsize=10, leg_title=None):
     """
     Inputs:
         ax - axis to modify
@@ -105,10 +105,12 @@ def set_plot_features(ax, title='', legend_labels=[], fontsize=10, leg_title=Non
     # Shrink current axis by 10%
     #box = ax.get_position()
     #ax.set_position([box.x0, box.y0, box.width * 0.85, box.height])
-    legend = ax.legend(legend_labels, loc='upper left', borderaxespad=0., fontsize=fontsize, title=leg_title, ncol=2) #bbox_to_anchor=(1.05, 1),
-    legend.get_title().set_fontsize(fontsize)
-    ax.set_xlim([-25,25])
+    if do_legend:
+        legend = ax.legend(legend_labels, loc='upper left', borderaxespad=0., fontsize=fontsize, title=leg_title, ncol=2) #bbox_to_anchor=(1.05, 1),
+        legend.get_title().set_fontsize(fontsize)
+    ax.set_xlim([-30,30])
     ax.set_ylim([-1., 1.]) 
+    ax.set_xticks(np.arange(-30,31,10)) 
     #ax.set_title(title, fontsize=16)
     ax.grid(True,linestyle=':')
 
@@ -122,58 +124,175 @@ if __name__ == "__main__":
     mkdir(plot_dir)
 
     # Set figure parameters
-    rcParams['figure.figsize'] = 5, 10.5
+    #rcParams['figure.figsize'] = 5.5, 10
+    rcParams['figure.figsize'] = 15, 7
     rcParams['font.size'] = 14
 
     # Start figure with 4 subplots
-    fig, ((ax1), (ax2), (ax3)) = plt.subplots(3, 1)
-
+    #fig, ((ax1), (ax2), (ax3)) = plt.subplots(3, 1)
+    
+    ax1 = plt.subplot2grid(shape=(2,6), loc=(0,0), colspan=2)
+    ax2 = plt.subplot2grid((2,6), (0,2), colspan=2)
+    ax3 = plt.subplot2grid((2,6), (0,4), colspan=2)
+    ax4 = plt.subplot2grid((2,6), (1,1), colspan=2)
+    ax5 = plt.subplot2grid((2,6), (1,3), colspan=2)
+    
     # Set colors for lines
     colors=['b','g','r','c','m','y']
     
     '''Rotation'''
     runs = ['rt_0.500', 'rt_0.750', 'sn_1.000',
             'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']
+            
+    runs_5 = ['rt_0.500_5', 'rt_0.750_5', 'mld_5',
+            'rt_1.250_5', 'rt_1.500_5', 'rt_1.750_5', 'rt_2.000_5']
+            
+    runs_15 = ['rt_0.500_15', 'rt_0.750_15', 'mld_15',
+            'rt_1.250_15', 'rt_1.500_15', 'rt_1.750_15', 'rt_2.000_15']
+            
     rots = np.array([0.5,0.75,1.,1.25,1.5,1.75,2.])
     
-    i=0
     max_rate_rot, max_rate_lat_rot, max_lat_rot = p_cent_rate_max(runs)
-    dpdt_eq_rot = rate_at_eq(runs)
-    for run in runs:
-        if run == 'sn_1.000':
+    max_rate_rot_5, max_rate_lat_rot_5, max_lat_rot_5 = p_cent_rate_max(runs_5)
+    max_rate_rot_15, max_rate_lat_rot_15, max_lat_rot_15 = p_cent_rate_max(runs_15)
+    print('rot peak lat:', np.mean(max_rate_lat_rot.values), '+-', np.std(max_rate_lat_rot.values))
+    
+    i=0
+    for run in runs_5:
+        if run == 'mld_5':
             p_cent_grad_scatter(run, color='k', ax=ax1, linewidth=2.)    
         else:
             p_cent_grad_scatter(run, color=colors[i], ax=ax1, linewidth=1.)
             i=i+1
-    set_plot_features(ax1, title='', legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.'], leg_title='$\Omega$/$\Omega_{E}$')
+    set_plot_features(ax1, title='', do_legend=False) #legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.'], leg_title='$\Omega$/$\Omega_{E}$')
+    ax1.set_ylabel('ITCZ migration rate')
+    ax1.set_xlabel('Precip centroid lat.')
+    
+    i=0
+    for run in runs:
+        if run == 'sn_1.000':
+            p_cent_grad_scatter(run, color='k', ax=ax2, linewidth=2.)    
+        else:
+            p_cent_grad_scatter(run, color=colors[i], ax=ax2, linewidth=1.)
+            i=i+1
+    set_plot_features(ax2, title='', do_legend=False) #, legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.'], leg_title='$\Omega$/$\Omega_{E}$')
+    ax2.set_ylabel('ITCZ migration rate')
+    ax2.set_xlabel('Precip centroid lat.')
+    
+    i=0
+    for run in runs_15:
+        if run == 'mld_15':
+            p_cent_grad_scatter(run, color='k', ax=ax3, linewidth=2.)    
+        else:
+            p_cent_grad_scatter(run, color=colors[i], ax=ax3, linewidth=1.)
+            i=i+1
+    set_plot_features(ax3, title='', legend_labels=['0.5', '0.75', '1.0', '1.25', '1.5', '1.75', '2.'], leg_title='$\Omega$/$\Omega_{E}$')
+    ax3.set_ylabel('ITCZ migration rate')
+    ax3.set_xlabel('Precip centroid lat.')
+    
+    #A = np.array([ np.log(rots), np.ones(rots.shape) ])
+    #model = sm.OLS(np.log(max_rate_rot.values[2:7]), A[:,2:7].T)
+    #result=model.fit()
+    #consts = result.params
+    #std_err = result.bse
+    #print('=== Coeffs ===')
+    #print(np.exp(consts[1]), consts[0])
+    #print('=== Std Errs ===')
+    #print(2*std_err[1]*np.exp(consts[1]), 2*std_err[0])
+    
+    #line = np.exp(consts[1]) * rots**(consts[0])
     
     
-    A = np.array([ np.log(rots), np.ones(rots.shape) ])
-    model = sm.OLS(np.log(max_rate_rot.values[2:7]), A[:,2:7].T)
+    ax4.plot(rots, max_rate_rot.values, 'xk', mew=2, ms=10)
+    ax4.plot(rots, max_rate_rot_5.values, 'xr', mew=2, ms=10)
+    ax4.plot(rots, max_rate_rot_15.values, 'xb', mew=2, ms=10)
+    
+    #ax2.plot(rots, dpdt_eq_rot, '+k', mew=2, ms=10)
+    #ax2.plot(rots, line,'k')
+    ax4.set_ylabel('ITCZ migration rate')
+    ax4.set_xlabel('$\Omega$/$\Omega_{E}$')
+    #ax2.set_xscale('log')
+    #ax2.set_yscale('log')
+    
+    
+    #model = sm.OLS(np.log(max_rate_lat_rot[0:7].values), A[:,0:7].T)
+    #result=model.fit()
+    #consts = result.params
+    #std_err = result.bse
+    #print('=== Coeffs ===')
+    #print(np.exp(consts[1]), consts[0])
+    #print('=== Std Errs ===')
+    #print(2*std_err[1]*np.exp(consts[1]), 2*std_err[0])
+    #line_log = np.exp(consts[1]) * rots**(consts[0])
+    
+    A = np.array([ rots, np.ones(rots.shape) ])
+    model = sm.OLS(max_rate_lat_rot[1:7].values, A[:,1:7].T)
     result=model.fit()
     consts = result.params
     std_err = result.bse
     print('=== Coeffs ===')
-    print(np.exp(consts[1]), consts[0])
+    print(consts[0], consts[1])
     print('=== Std Errs ===')
-    print(2*std_err[1]*np.exp(consts[1]), 2*std_err[0])
+    print( 2*std_err[0], 2*std_err[1])
+    line_lin = consts[1] + rots*(consts[0])
     
-    line = np.exp(consts[1]) * rots**(consts[0])
+    A = np.array([ 1./rots])
+    model = sm.OLS(np.sin(max_rate_lat_rot.values*np.pi/180.), A.T)
+    result=model.fit()
+    consts = result.params
+    std_err = result.bse
+    print('=== Coeffs ===')
+    print(consts[0])
+    print('=== Std Errs ===')
+    print( 2*std_err[0])
+    line_inv = 180./np.pi * np.arcsin(consts[0]/rots)
     
-    
-
-    ax2.plot(rots, max_rate_rot.values, 'xk', mew=2, ms=10)
-    ax2.plot(rots, dpdt_eq_rot, '+k', mew=2, ms=10)
-    #ax2.plot(rots, line,'k')
-    ax2.set_ylabel('ITCZ migration rate')
-    ax2.set_xlabel('$\Omega$/$\Omega_{E}$')
+    #A = np.array([ rots ])
+    #model = sm.OLS(1./np.sin(max_rate_lat_rot.values*np.pi/180.), A.T)
+    #result=model.fit()
+    #consts = result.params
+    #std_err = result.bse
+    #print('=== Coeffs ===')
+    #print(consts[0])
+    #print('=== Std Errs ===')
+    #print( 2*std_err[0])
+    #line_sin = np.arcsin(1./(consts[0]*rots))*180./np.pi
     
     #ax3.plot(rots, rots*np.sin(max_lat_rot.values * np.pi/180.), 'xk', mew=2, ms=10)
-    ax3.plot(rots, max_lat_rot.values, 'xk', mew=2, ms=10)
-    ax3.plot(rots, max_rate_lat_rot.values, '+k', mew=2, ms=10)
-    #ax3.plot(rots, line,'k')
-    ax3.set_ylabel('Amplitude')
-    ax3.set_xlabel('$\Omega$/$\Omega_{E}$')
+    #ax3.plot(rots, max_lat_rot.values, 'xk', mew=2, ms=10)
+    ax5.plot(rots, max_rate_lat_rot.values, 'xk', mew=2, ms=10)
+    ax5.plot(rots, max_rate_lat_rot_5.values, 'xr', mew=2, ms=10)
+    ax5.plot(rots, max_rate_lat_rot_15.values, 'xb', mew=2, ms=10)
+    
+    f_crit_05 = max_rate_lat_rot[0]*0.5
+    f_crit_2 = max_rate_lat_rot[6]*2.
+    f_crit = np.sin(max_rate_lat_rot[2]*np.pi/180.)
+    
+    #f_crit = 2 * 7.2921150e-5 * max_rate_lat_rot[2]*np.pi/180.
+    lat_predictions = np.arcsin((f_crit/rots).values)*180./np.pi
+    lat_predictions_05 = f_crit_05/rots
+    lat_predictions_2 = f_crit_2/rots
+    
+    #ax3.plot(rots, line_sin,'r')
+    #ax3.plot(rots, line_inv,'k')
+    ax5.plot(rots, lat_predictions,'k')
+    #ax3.plot(rots, lat_predictions_05,'b')
+    #ax3.plot(rots, lat_predictions_2,'b')
+    ax5.set_ylabel('Latitude')
+    ax5.set_xlabel('$\Omega$/$\Omega_{E}$')
+    #ax3.set_xscale('log')
+    #ax3.set_yscale('log')
+    
+    colors=['b','g','k','r','c','m','y']
+    for i in range(7):
+        ax1.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
+        ax2.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
+        ax3.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
+        #ax1.plot([line_inv[i],line_inv[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
+    
+    ax4.grid(True,linestyle=':')
+    ax5.grid(True,linestyle=':')
+    ax5.set_yticks(np.arange(2,16,2))
     
     
     
@@ -183,7 +302,7 @@ if __name__ == "__main__":
     #ax3.set_yscale('log')
     
     
-    plt.subplots_adjust(left=0.15, right=0.9, top=0.95, bottom=0.05, hspace=0.3)
+    plt.subplots_adjust(left=0.075, right=0.97, top=0.95, bottom=0.1, hspace=0.4, wspace=1.)
     
     # Save as a pdf
     plt.savefig(plot_dir + 'pcent_rate_rot.pdf', format='pdf')

@@ -125,11 +125,11 @@ def save_vort_eq(run, months, do_ss=False):
 
 if __name__ == "__main__":
     
-    rot_fac=[0.75,1.,1.25,1.5]
-    for run in ['rt_0.750', 'sn_1.000', 'rt_1.250', 'rt_1.500']:   
+    #rot_fac=[0.75,1.,1.25,1.5]
+    for run in ['ob_40.000']:   
         k=0
         for i in range(121,481):
-            vort_eq(run, i, rot_fac=rot_fac[k])
+            vort_eq(run, i)
         save_vort_eq(run, [121,481])
         k=k+1
         
