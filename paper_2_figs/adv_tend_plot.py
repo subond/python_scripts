@@ -55,7 +55,7 @@ def vdtdy_plot(run, ax, lev=850.):
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
-    #data.p_cent.plot.line(ax=ax,color='k', linewidth=2)
+    data.p_cent.plot.line(ax=ax,color='k', linewidth=2)
     ax.set_xlabel('')
     ax.set_ylim([-60,60])
     ax.set_ylabel('Latitude')
@@ -65,23 +65,28 @@ def vdtdy_plot(run, ax, lev=850.):
     
     return f1
 
-for run in ['rt_0.500', 'rt_0.750', 'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']:
+#for run in ['rt_0.500', 'rt_0.750', 'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']:
+for run in ['sine_sst_10m']:
     plot_dir = '/scratch/rg419/plots/paper_2_figs/adv_tend_rot/'
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
 
-    rcParams['figure.figsize'] = 5.5, 7.5
-    rcParams['font.size'] = 16
+    rcParams['figure.figsize'] = 5.5, 7.
+    rcParams['font.size'] = 14
     
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
 
     f1 = vdtdy_plot('sn_1.000', ax1)
     vdtdy_plot(run, ax2)
     ax2.set_xlabel('Pentad')
+    
+    ax1.text(-10, 60., 'a)')
+    ax2.text(-10, 60., 'b)')
+    
+    
+    plt.subplots_adjust(left=0.15, right=0.95, top=0.97, bottom=0.0)
 
-    plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.0)
-
-    cb1=fig.colorbar(f1, ax=(ax1, ax2), use_gridspec=True, orientation = 'horizontal',fraction=0.15, pad=0.1, aspect=40)
+    cb1=fig.colorbar(f1, ax=(ax1, ax2), use_gridspec=True, orientation = 'horizontal',fraction=0.1, pad=0.1, aspect=40)
     cb1.set_label('Advective temperature tendency, Kday$^{-1}$')
 
     plt.savefig(plot_dir+'adv_tend_fig_850_nonflux_' + run + '.pdf', format='pdf')

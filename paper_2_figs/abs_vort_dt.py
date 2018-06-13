@@ -216,7 +216,7 @@ def abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=None, lev=150., filename='
             #ax.plot(pcent.sel(xofyear=times), dvordtvor_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
             ax.set_ylim([-0.04,0.02])
             #ax.set_ylim([-0.1,0.1])
-            ax.set_ylabel('$1/\zeta$*d$\zeta$/dt at precip. centroid')
+            ax.set_ylabel('$1/\zeta$*d$\zeta$/dt at ITCZ')
     
     ax.set_xlabel('ITCZ migration rate')
     ax.set_xlim([0.,0.6])
@@ -261,7 +261,7 @@ if __name__ == "__main__":
     mkdir(plot_dir)
 
     # Set figure parameters
-    rcParams['figure.figsize'] = 5.5, 10.5
+    rcParams['figure.figsize'] = 5.5, 8.5
     rcParams['font.size'] = 14
 
     # Start figure with 4 subplots
@@ -286,7 +286,7 @@ if __name__ == "__main__":
     ax2.set_position([box.x0, box.y0, box.width * 0.85, box.height])
     ax2.set_xlabel('Pentad')
     ax2.set_ylabel('ITCZ latitude')
-    ax2_twin.set_ylabel('d$\zeta$/dt at precip. centroid', color='b')
+    ax2_twin.set_ylabel('d$\zeta$/dt at ITCZ', color='b')
     ax2.set_xlim([0,72])
     ax2.set_xticks(np.arange(0,73,12))
     #ax2.set_yticks(np.arange(-30.,30.1,10.))
@@ -307,9 +307,13 @@ if __name__ == "__main__":
     
     abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=ax3, interp=False)#, dvordt=True)
     
-    plt.subplots_adjust(left=0.17, right=0.8, top=0.97, bottom=0.05, hspace=0.3)
+    ax1.text(-12, 60., 'a)')
+    ax2.text(-12, 0.6, 'b)')
+    ax3.text(-0.12, 0.02, 'c)')
     
-    plt.savefig(plot_dir+'test.pdf', format='pdf')
+    plt.subplots_adjust(left=0.17, right=0.8, top=0.97, bottom=0.07, hspace=0.3)
+    
+    plt.savefig(plot_dir+'abs_vort_dt_' + control + '.pdf', format='pdf')
     plt.close()
     
     

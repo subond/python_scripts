@@ -29,7 +29,7 @@ def area_mean(run, region=None, lonin=[0.,360.], latin=[-90.,90.]):
         lonin = [-120,-80]
         latin = [5,30]
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     try:
         data['precipitation'] = data.condensation_rain + data.convection_rain

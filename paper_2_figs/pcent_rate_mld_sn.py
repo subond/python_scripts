@@ -127,129 +127,221 @@ if __name__ == "__main__":
 
     # Start figure with 4 subplots
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = plt.subplots(3, 3)
-
+    
+    # Switch on errorbars
+    errorbars=True
+    
     # Set colors for lines
     colors=['b','g','r','c','m','y']
     
+    
+    '''Seasons'''
+    runs_sn = ['sn_0.250', 'sn_0.500', 'sn_1.000', 
+            'sn_2.000', 'sn_3.000', 'sn_4.000']
+    days = [True, False, False, False, False, False]
+    period_fac = [0.25, 0.5, 1., 2., 3., 4.]
+    
+    # Get rates and lats needed
+    max_rate_sn, max_rate_lat_sn, max_lat_sn = p_cent_rate_max(runs_sn, days=days)
+    dpdt_eq_sn = rate_at_eq(runs_sn, days=days)
+    
+    # Print values needed in paper
+    print('sn1 max rate: ', max_rate_sn[2].values)
+    print('sn1 max_rate lat: ', max_rate_lat_sn[2].values)
+    print('sn1 eq rate: ', dpdt_eq_sn[2])
+    print('scaled rates at eq: ', dpdt_eq_sn * period_fac)
+    
+    # Calculate 95% confidence interval from bootstrapping data
+    err_sn=[]
+    for errname in runs_sn:
+        err_sn.append(np.load(errname+'_bootstrap.npy'))
+    err_sn = np.asarray(err_sn)
+    lower_sn = np.percentile(err_sn,2.5,axis=2)
+    upper_sn = np.percentile(err_sn,97.5,axis=2)
+    
+    # Plot 0.25 first as this is in days
+    p_cent_grad_scatter(runs_sn[0], days=True, color=colors[0], ax=ax1, linewidth=1.)
+    # Do other plots, plot sn_1.000 run as thicker line
+    j=1
+    for run in runs_sn[1:]:
+        if run == 'sn_1.000':
+            p_cent_grad_scatter(run, color='k', ax=ax1, linewidth=2.)    
+        else:
+            p_cent_grad_scatter(run, color=colors[j], ax=ax1, linewidth=1.) 
+            j=j+1
+    set_plot_features(ax1, title='Varying Year Lengths', legend_labels=['0.25', '0.5', '1.0', '2.0', '3.0', '4.0'], leg_title='P/P$_{E}$')
+    
+    # Now do unscaled rate plots and lat plots
+    
+    if errorbars:
+        ax4.errorbar(period_fac, max_rate_sn.values,
+                 yerr=[max_rate_sn.values-lower_sn[:,0], upper_sn[:,0]-max_rate_sn.values], 
+                 linestyle='none', color='k', marker='.',mew=2, ms=8)
+    
+        ax4.errorbar(period_fac, dpdt_eq_sn,
+                 yerr=[dpdt_eq_sn-lower_sn[:,3], upper_sn[:,3]-dpdt_eq_sn], 
+                 linestyle='none', color='r', marker='.',mew=2, ms=8)
+    
+        ax7.errorbar(period_fac, max_lat_sn.values,
+                 yerr=[max_lat_sn.values-lower_sn[:,2], upper_sn[:,2]-max_lat_sn.values], 
+                 linestyle='none', color='r', marker='.',mew=2, ms=8)
+    
+        ax7.errorbar(period_fac, max_rate_lat_sn.values,
+                 yerr=[max_rate_lat_sn.values-lower_sn[:,1], upper_sn[:,1]-max_rate_lat_sn.values], 
+                 linestyle='none', color='k', marker='.',mew=2, ms=8)
+    
+    else:
+        ax4.plot(period_fac, max_rate_sn.values, 'xk', mew=2, ms=10)
+        ax4.plot(period_fac, dpdt_eq_sn, 'xr', mew=2, ms=10)
+        ax7.plot(period_fac, max_lat_sn.values, 'xr', mew=2, ms=10)
+        ax7.plot(period_fac, max_rate_lat_sn.values, 'xk', mew=2, ms=10)
+    
+    # Set labels
+    ax4.set_ylabel('ITCZ migration rate')
+    ax4.set_xlabel('P/P$_{E}$')
+    ax7.set_ylabel('Latitude')
+    ax7.set_xlabel('P/P$_{E}$')
+
+    
+    
+    '''Seasons scaled'''
+
+    # Plot 0.25 first as this is in days
+    p_cent_grad_scatter(runs_sn[0], days=True, period_fac=period_fac[0], color=colors[0], ax=ax2, linewidth=1.)
+    # Do other plots, plot sn_1.000 run as thicker line
+    j=1
+    for run in runs_sn[1:]:
+        if run == 'sn_1.000':
+            p_cent_grad_scatter(run, color='k', ax=ax2, linewidth=2.)    
+        else:
+            p_cent_grad_scatter(run, period_fac=period_fac[j], color=colors[j], ax=ax2, linewidth=1.)    
+            j=j+1
+    set_plot_features(ax2, title='Varying Year Lengths (Rates scaled)', legend_labels=['0.25', '0.5', '1.0', '2.0', '3.0', '4.0'], leg_title='P/P$_{E}$')
+    
+    # Now do scaled rate plots and lat plots
+    
+    if errorbars:
+        ax5.errorbar(period_fac, max_rate_sn.values[:,0]*period_fac,
+                 yerr=[(max_rate_sn.values[:,0]-lower_sn[:,0])*period_fac, (upper_sn[:,0]-max_rate_sn.values[:,0])*period_fac], 
+                 linestyle='none', color='k', marker='.',mew=2, ms=8)
+    
+        ax5.errorbar(period_fac, dpdt_eq_sn*period_fac,
+                 yerr=[(dpdt_eq_sn-lower_sn[:,3])*period_fac, (upper_sn[:,3]-dpdt_eq_sn)*period_fac], 
+                 linestyle='none', color='r', marker='.',mew=2, ms=8)
+    
+    else:
+        ax5.plot(period_fac, max_rate_sn.values[:,0]*period_fac, 'xk', mew=2, ms=10)
+        ax5.plot(period_fac, dpdt_eq_sn*period_fac, 'xr', mew=2, ms=10)
+    
+    # Set labels
+    ax5.set_xlabel('P/P$_{E}$')
+    ax5.set_ylabel('ITCZ migration rate')
+    
+    
+    
+    
     '''Mixed layer depths'''
-    runs = ['mld_2.5', 'mld_5', 'sn_1.000', 
+    
+    runs_mld = ['mld_2.5', 'mld_5', 'sn_1.000', 
             'mld_15', 'mld_20']
     mlds = np.array([2.5,5.,10.,15.,20.])
-    i=0
-    max_rate_mld, max_rate_lat_mld, max_lat_mld = p_cent_rate_max(runs)
-    dpdt_eq_mld = rate_at_eq(runs)
-    for run in runs:
+    
+    # Get rates and lats needed
+    max_rate_mld, max_rate_lat_mld, max_lat_mld = p_cent_rate_max(runs_mld)
+    dpdt_eq_mld = rate_at_eq(runs_mld)
+    
+    # Do plots, plot sn_1.000 run as thicker line
+    j=0
+    for run in runs_mld:
         if run == 'sn_1.000':
             p_cent_grad_scatter(run, color='k', ax=ax3, linewidth=2.)    
         else:
-            p_cent_grad_scatter(run, color=colors[i], ax=ax3, linewidth=1.)
-            i=i+1
+            p_cent_grad_scatter(run, color=colors[j], ax=ax3, linewidth=1.)
+            j=j+1
     set_plot_features(ax3, title='Varying MLDs', legend_labels=['2.5', '5.', '10.', '15.', '20.'], leg_title='MLD (m)')
     
+    
+    print('mld peak lat:', np.mean(max_rate_lat_mld[0:4].values), '+-', np.std(max_rate_lat_mld[0:4].values))
+    print('sn peak lat:', np.mean(max_rate_lat_sn[1:6].values), '+-', np.std(max_rate_lat_sn[1:6].values))
+    
+    # Calculate 95% confidence interval from bootstrapping data
+    err_mld=[]
+    for errname in runs_mld:
+        err_mld.append(np.load(errname+'_bootstrap.npy'))
+    err_mld = np.asarray(err_mld)
+    lower_mld = np.percentile(err_mld,2.5,axis=2)
+    upper_mld = np.percentile(err_mld,97.5,axis=2)
+    
+    if errorbars:
+        ax6.errorbar(mlds, max_rate_mld.values,
+                     yerr=[max_rate_mld.values-lower_mld[:,0], upper_mld[:,0]-max_rate_mld.values], 
+                     linestyle='none', color='k', marker='.',mew=2, ms=8)
+    
+        ax6.errorbar(mlds, dpdt_eq_mld,
+                     yerr=[dpdt_eq_mld-lower_mld[:,3], upper_mld[:,3]-dpdt_eq_mld], 
+                     linestyle='none', color='r', marker='.',mew=2, ms=8)
+        
+        ax9.errorbar(mlds, max_lat_mld.values,
+                     yerr=[max_lat_mld.values-lower_mld[:,2], upper_mld[:,2]-max_lat_mld.values], 
+                     linestyle='none', color='r', marker='.',mew=2, ms=8)
+    
+        ax9.errorbar(mlds, max_rate_lat_mld.values,
+                     yerr=[max_rate_lat_mld.values-lower_mld[:,1], upper_mld[:,1]-max_rate_lat_mld.values], 
+                     linestyle='none', color='k', marker='.',mew=2, ms=8)
+    
+    else:
+        ax6.plot(mlds, max_rate_mld.values, 'xk', mew=2, ms=10)
+        ax6.plot(mlds, dpdt_eq_mld, 'xr', mew=2, ms=10)
+        ax9.plot(mlds, max_lat_mld.values, 'xr', mew=2, ms=10)
+        ax9.plot(mlds, max_rate_lat_mld.values, 'xk', mew=2, ms=10)
+        
+    # Fit a linear relation to the max rates
     A = np.array([ mlds, np.ones(mlds.shape) ])
     model = sm.OLS(max_rate_mld.values, A.T)
     result=model.fit()
     consts = result.params
     std_err = result.bse
-    print('=== Coeffs ===')
-    print(consts[0], consts[1])
-    print('=== Std Errs ===')
-    print(2.*std_err[0], 2*std_err[1])
-    line = mlds*consts[0] + consts[1]
-    ax6.plot(mlds, max_rate_mld.values, 'xk', mew=2, ms=10)
-    ax6.plot(mlds, line,'k')
-    ax6.set_ylabel('ITCZ migration rate')
+    print('* MLD max rate = (', consts[0], ' +- ', 2*std_err[0], ') * MLD + (', consts[1], ' +- ', 2*std_err[1], ') *')
+    line_maxrate = mlds*consts[0] + consts[1]
     
+    
+    # Fit a linear relation to the max lats
     model = sm.OLS(max_lat_mld.values, A.T)
     result=model.fit()
     consts = result.params
     std_err = result.bse
-    print('=== Coeffs ===')
-    print(consts[0], consts[1])
-    print('=== Std Errs ===')
-    print(2.*std_err[0], 2*std_err[1])
-    line = mlds*consts[0] + consts[1]
-    ax9.plot(mlds, max_lat_mld.values, 'xr', mew=2, ms=10)
-    ax9.plot(mlds, max_rate_lat_mld.values, 'xk', mew=2, ms=10)
-    ax9.plot(mlds, line,'r')
-    ax9.set_ylabel('Latitude')
-    ax9.set_xlabel('MLD, m')
+    print('* MLD max lat = (', consts[0], ' +- ', 2*std_err[0], ') * MLD + (', consts[1], ' +- ', 2*std_err[1], ') *')
+    line_maxlat = mlds*consts[0] + consts[1]
     
+    # Fit an inverse relation to the rates at the equator
     A = np.array([ 1./mlds, np.ones(mlds.shape) ])
     model = sm.OLS(dpdt_eq_mld, A.T)
     result=model.fit()
     consts = result.params
     std_err = result.bse
-    print('=== Coeffs ===')
-    print(consts[0], consts[1])
-    print('=== Std Errs ===')
-    print(2.*std_err[0], 2*std_err[1])
-    line = 1./np.arange(2.5,20.01,0.01)*consts[0] + consts[1]
-    ax6.plot(mlds, dpdt_eq_mld, 'xr', mew=2, ms=10)
-    ax6.plot(np.arange(2.5,20.01,0.01), line,'r')
+    print('* MLD eq rate = (', consts[0], ' +- ', 2*std_err[0], ') / MLD + (', consts[1], ' +- ', 2*std_err[1], ') *')
+    line_eqrate = 1./np.arange(2.5,20.01,0.01)*consts[0] + consts[1]
+    
+    
+    # Plot the best fit line and add labels        
+    ax6.plot(mlds, line_maxrate,'k')
+    ax6.plot(np.arange(2.5,20.01,0.01), line_eqrate,'r')
+    ax6.set_ylabel('ITCZ migration rate')
     ax6.set_xlabel('MLD, m')
     
+    ax9.plot(mlds, line_maxlat,'r')
+    ax9.set_ylabel('Latitude')
+    ax9.set_xlabel('MLD, m')
+        
     
-    # Year length
-    runs = ['sn_0.250', 'sn_0.500', 'sn_1.000', 
-            'sn_2.000', 'sn_3.000', 'sn_4.000']
-    days = [True, False, False, False, False, False]
-    max_rate_sn, max_rate_lat_sn, max_lat_sn = p_cent_rate_max(runs, days=days)
-    print('mld peak lat:', np.mean(max_rate_lat_mld[0:4].values), '+-', np.std(max_rate_lat_mld[0:4].values))
-    print('sn peak lat:', np.mean(max_rate_lat_sn[1:6].values), '+-', np.std(max_rate_lat_sn[1:6].values))
-    dpdt_eq_sn = rate_at_eq(runs, days=days)
-    # Set scaling factors for rate
-    period_fac = [0.25, 0.5, 1., 2., 3., 4.]
-    # Do 0.25 first as this is in days
-    p_cent_grad_scatter(runs[0], days=True, color=colors[0], ax=ax1, linewidth=1.)
-    # Do other plots, plot sn_1.000 run as thicker line
-    j=1
-    for i in range(1,6):
-        if runs[i] == 'sn_1.000':
-            p_cent_grad_scatter(runs[i], color='k', ax=ax1, linewidth=2.)    
-        else:
-            p_cent_grad_scatter(runs[i], color=colors[j], ax=ax1, linewidth=1.) 
-            j=j+1
-    set_plot_features(ax1, title='Varying Year Lengths', legend_labels=['0.25', '0.5', '1.0', '2.0', '3.0', '4.0'], leg_title='P/P$_{E}$')
-    
-    
-    ax4.plot(period_fac, max_rate_sn.values, 'xk', mew=2, ms=10)
-    ax4.plot(period_fac, dpdt_eq_sn, 'xr', mew=2, ms=10)
-    ax4.set_ylabel('ITCZ migration rate')
-    ax4.set_xlabel('P/P$_{E}$')
-    #ax5.set_xscale('log')
-    #ax5.set_yscale('log')
-    
-    ax7.plot(period_fac, max_lat_sn.values, 'xr', mew=2, ms=10)
-    ax7.plot(period_fac, max_rate_lat_sn.values, 'xk', mew=2, ms=10)
-    ax7.set_ylabel('Latitude')
-    ax7.set_xlabel('P/P$_{E}$')
-    #ax6.set_xscale('log')
-    #ax6.set_yscale('log')
-    
-    
-    # Year length, scaled
-    runs = ['sn_0.250', 'sn_0.500', 'sn_1.000', 
-            'sn_2.000', 'sn_3.000', 'sn_4.000']
-    # Set scaling factors for rate
-    period_fac = [0.25, 0.5, 1., 2., 3., 4.]
-    # Do 0.25 first as this is in days
-    p_cent_grad_scatter(runs[0], days=True, period_fac=period_fac[0], color=colors[0], ax=ax2, linewidth=1.)
-    # Do other plots, plot sn_1.000 run as thicker line
-    j=1
-    for i in range(1,6):
-        if runs[i] == 'sn_1.000':
-            p_cent_grad_scatter(runs[i], color='k', ax=ax2, linewidth=2.)    
-        else:
-            p_cent_grad_scatter(runs[i], period_fac=period_fac[i], color=colors[j], ax=ax2, linewidth=1.)    
-            j=j+1
-    set_plot_features(ax2, title='Varying Year Lengths (Rates scaled)', legend_labels=['0.25', '0.5', '1.0', '2.0', '3.0', '4.0'], leg_title='P/P$_{E}$')
-    
-    ax5.plot(period_fac, max_rate_sn.values[:,0]*period_fac, 'xk', mew=2, ms=10)
-    ax5.plot(period_fac, dpdt_eq_sn*period_fac, 'xr', mew=2, ms=10)
-    ax5.set_xlabel('P/P$_{E}$')
-    ax5.set_ylabel('ITCZ migration rate')
-    
+    ax1.text(-35, 1., 'a)')
+    ax2.text(-35, 1., 'b)')
+    ax3.text(-35, 1., 'c)')
+    ax4.text(-0.7, 1., 'd)')
+    ax5.text(-0.7, 1., 'e)')
+    ax6.text(-2.5, 1., 'f)')
+    ax7.text(-0.7, 25., 'g)')
+    ax9.text(-2.5, 25., 'h)')
     
     
     for ax in [ax1, ax2, ax3]:
@@ -271,5 +363,7 @@ if __name__ == "__main__":
     # Save as a pdf
     plt.savefig(plot_dir + 'pcent_rate_mld_sn.pdf', format='pdf')
     plt.close()
+    
+    
     
     

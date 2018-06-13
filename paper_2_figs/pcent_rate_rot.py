@@ -124,12 +124,11 @@ if __name__ == "__main__":
     mkdir(plot_dir)
 
     # Set figure parameters
-    #rcParams['figure.figsize'] = 5.5, 10
     rcParams['figure.figsize'] = 15, 7
     rcParams['font.size'] = 14
-
-    # Start figure with 4 subplots
-    #fig, ((ax1), (ax2), (ax3)) = plt.subplots(3, 1)
+    
+    errorbars=True
+    
     
     ax1 = plt.subplot2grid(shape=(2,6), loc=(0,0), colspan=2)
     ax2 = plt.subplot2grid((2,6), (0,2), colspan=2)
@@ -190,117 +189,98 @@ if __name__ == "__main__":
     ax3.set_ylabel('ITCZ migration rate')
     ax3.set_xlabel('Precip centroid lat.')
     
-    #A = np.array([ np.log(rots), np.ones(rots.shape) ])
-    #model = sm.OLS(np.log(max_rate_rot.values[2:7]), A[:,2:7].T)
-    #result=model.fit()
-    #consts = result.params
-    #std_err = result.bse
-    #print('=== Coeffs ===')
-    #print(np.exp(consts[1]), consts[0])
-    #print('=== Std Errs ===')
-    #print(2*std_err[1]*np.exp(consts[1]), 2*std_err[0])
     
-    #line = np.exp(consts[1]) * rots**(consts[0])
+    if errorbars:
+        # Calculate 95% confidence interval from bootstrapping data and add to plots
+        err=[]
+        for errname in runs:
+            err.append(np.load(errname+'_bootstrap.npy'))
+        err = np.asarray(err)
+        lower = np.percentile(err,2.5,axis=2)
+        upper = np.percentile(err,97.5,axis=2)
+        
+        err_5=[]
+        for errname in runs_5:
+            err_5.append(np.load(errname+'_bootstrap.npy'))
+        err_5 = np.asarray(err_5)
+        lower_5 = np.percentile(err_5,2.5,axis=2)
+        upper_5 = np.percentile(err_5,97.5,axis=2)
+    
+        err_15=[]
+        for errname in runs_15:
+            err_15.append(np.load(errname+'_bootstrap.npy'))
+        err_15 = np.asarray(err_15)
+        lower_15 = np.percentile(err_15,2.5,axis=2)
+        upper_15 = np.percentile(err_15,97.5,axis=2)
+        
+        ax4.errorbar(rots, max_rate_rot_5.values,
+                 yerr=[max_rate_rot_5.values-lower_5[:,0], upper_5[:,0]-max_rate_rot_5.values], 
+                 linestyle='none', color='r', marker='.',mew=2, ms=8)
+
+        ax4.errorbar(rots, max_rate_rot_15.values,
+                 yerr=[max_rate_rot_15.values-lower_15[:,0], upper_15[:,0]-max_rate_rot_15.values], 
+                 linestyle='none', color='b', marker='.',mew=2, ms=8)
+    
+        ax4.errorbar(rots, max_rate_rot.values,
+                 yerr=[max_rate_rot.values-lower[:,0], upper[:,0]-max_rate_rot.values], 
+                 linestyle='none', color='k', marker='.',mew=2, ms=8)
+        
+        ax5.errorbar(rots, max_rate_lat_rot_5.values,
+                     yerr=[max_rate_lat_rot_5.values-lower_5[:,1], upper_5[:,1]-max_rate_lat_rot_5.values], 
+                     linestyle='none', color='r', marker='.',mew=2, ms=8, label='5m')
+                 
+        ax5.errorbar(rots, max_rate_lat_rot_15.values,
+                     yerr=[max_rate_lat_rot_15.values-lower_15[:,1], upper_15[:,1]-max_rate_lat_rot_15.values], 
+                     linestyle='none', color='b', marker='.',mew=2, ms=8, label='15m')
+    
+        ax5.errorbar(rots, max_rate_lat_rot.values,
+                     yerr=[max_rate_lat_rot.values-lower[:,1], upper[:,1]-max_rate_lat_rot.values], 
+                     linestyle='none', color='k', marker='.',mew=2, ms=8, label='10m')
+    
+    else:
+        # Otherwise, just plot scatter
+        ax4.plot(rots, max_rate_rot.values, 'xk', mew=2, ms=10)
+        ax4.plot(rots, max_rate_rot_5.values, 'xr', mew=2, ms=10)
+        ax4.plot(rots, max_rate_rot_15.values, 'xb', mew=2, ms=10)
+        ax5.plot(rots, max_rate_lat_rot.values, 'xk', mew=2, ms=10, label='10m')
+        ax5.plot(rots, max_rate_lat_rot_5.values, 'xr', mew=2, ms=10, label='5m')
+        ax5.plot(rots, max_rate_lat_rot_15.values, 'xb', mew=2, ms=10, label='15m')
     
     
-    ax4.plot(rots, max_rate_rot.values, 'xk', mew=2, ms=10)
-    ax4.plot(rots, max_rate_rot_5.values, 'xr', mew=2, ms=10)
-    ax4.plot(rots, max_rate_rot_15.values, 'xb', mew=2, ms=10)
-    
-    #ax2.plot(rots, dpdt_eq_rot, '+k', mew=2, ms=10)
-    #ax2.plot(rots, line,'k')
-    ax4.set_ylabel('ITCZ migration rate')
-    ax4.set_xlabel('$\Omega$/$\Omega_{E}$')
-    #ax2.set_xscale('log')
-    #ax2.set_yscale('log')
-    
-    
-    #model = sm.OLS(np.log(max_rate_lat_rot[0:7].values), A[:,0:7].T)
-    #result=model.fit()
-    #consts = result.params
-    #std_err = result.bse
-    #print('=== Coeffs ===')
-    #print(np.exp(consts[1]), consts[0])
-    #print('=== Std Errs ===')
-    #print(2*std_err[1]*np.exp(consts[1]), 2*std_err[0])
-    #line_log = np.exp(consts[1]) * rots**(consts[0])
-    
-    A = np.array([ rots, np.ones(rots.shape) ])
-    model = sm.OLS(max_rate_lat_rot[1:7].values, A[:,1:7].T)
-    result=model.fit()
-    consts = result.params
-    std_err = result.bse
-    print('=== Coeffs ===')
-    print(consts[0], consts[1])
-    print('=== Std Errs ===')
-    print( 2*std_err[0], 2*std_err[1])
-    line_lin = consts[1] + rots*(consts[0])
-    
-    A = np.array([ 1./rots])
-    model = sm.OLS(np.sin(max_rate_lat_rot.values*np.pi/180.), A.T)
-    result=model.fit()
-    consts = result.params
-    std_err = result.bse
-    print('=== Coeffs ===')
-    print(consts[0])
-    print('=== Std Errs ===')
-    print( 2*std_err[0])
-    line_inv = 180./np.pi * np.arcsin(consts[0]/rots)
-    
-    #A = np.array([ rots ])
-    #model = sm.OLS(1./np.sin(max_rate_lat_rot.values*np.pi/180.), A.T)
-    #result=model.fit()
-    #consts = result.params
-    #std_err = result.bse
-    #print('=== Coeffs ===')
-    #print(consts[0])
-    #print('=== Std Errs ===')
-    #print( 2*std_err[0])
-    #line_sin = np.arcsin(1./(consts[0]*rots))*180./np.pi
-    
-    #ax3.plot(rots, rots*np.sin(max_lat_rot.values * np.pi/180.), 'xk', mew=2, ms=10)
-    #ax3.plot(rots, max_lat_rot.values, 'xk', mew=2, ms=10)
-    ax5.plot(rots, max_rate_lat_rot.values, 'xk', mew=2, ms=10)
-    ax5.plot(rots, max_rate_lat_rot_5.values, 'xr', mew=2, ms=10)
-    ax5.plot(rots, max_rate_lat_rot_15.values, 'xb', mew=2, ms=10)
-    
-    f_crit_05 = max_rate_lat_rot[0]*0.5
-    f_crit_2 = max_rate_lat_rot[6]*2.
-    f_crit = np.sin(max_rate_lat_rot[2]*np.pi/180.)
-    
-    #f_crit = 2 * 7.2921150e-5 * max_rate_lat_rot[2]*np.pi/180.
-    lat_predictions = np.arcsin((f_crit/rots).values)*180./np.pi
-    lat_predictions_05 = f_crit_05/rots
-    lat_predictions_2 = f_crit_2/rots
-    
-    #ax3.plot(rots, line_sin,'r')
-    #ax3.plot(rots, line_inv,'k')
+    # Add approximate inverse relation to max rate plot, and approximations to trajectory plots
+    f_crit = max_rate_lat_rot[2].values * rots[2]
+    lat_predictions = f_crit/rots
     ax5.plot(rots, lat_predictions,'k')
-    #ax3.plot(rots, lat_predictions_05,'b')
-    #ax3.plot(rots, lat_predictions_2,'b')
-    ax5.set_ylabel('Latitude')
-    ax5.set_xlabel('$\Omega$/$\Omega_{E}$')
-    #ax3.set_xscale('log')
-    #ax3.set_yscale('log')
     
-    colors=['b','g','k','r','c','m','y']
+    colors=['b','g','k','r','c','m','y']    
     for i in range(7):
         ax1.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
         ax2.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
         ax3.plot([lat_predictions[i],lat_predictions[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
-        #ax1.plot([line_inv[i],line_inv[i]], [-1.,1.], colors[i]+'--', alpha=0.5)
     
+    # Add labels 
+    ax4.set_ylabel('ITCZ migration rate')
+    ax4.set_xlabel('$\Omega$/$\Omega_{E}$')
+    ax4.set_yticks(np.arange(0.1,0.8,0.1))
+    ax5.set_ylabel('Latitude')
+    ax5.set_xlabel('$\Omega$/$\Omega_{E}$')
+    ax5.set_yticks(np.arange(2,17,2))
+    ax5.set_ylim([2,16])
+    
+    # Add grid
     ax4.grid(True,linestyle=':')
     ax5.grid(True,linestyle=':')
-    ax5.set_yticks(np.arange(2,16,2))
     
+    legend = ax5.legend( loc='upper right', borderaxespad=0., fontsize=10, title='Mixed layer depth', ncol=2)
+    legend.get_title().set_fontsize(10)
     
-    
-   # ax2.set_xscale('log')
-    #ax2.set_yscale('log')
-    #ax3.set_xscale('log')
-    #ax3.set_yscale('log')
-    
+    # Add figure numbering
+    ax1.text(-45, 1., 'a)')
+    ax2.text(-45, 1., 'b)')
+    ax3.text(-45, 1., 'c)')
+    ax4.text(0.1, 0.7, 'd)')
+    ax5.text(0.1, 16., 'e)')
+
     
     plt.subplots_adjust(left=0.075, right=0.97, top=0.95, bottom=0.1, hspace=0.4, wspace=1.)
     
