@@ -16,7 +16,7 @@ def plot_climatology_zanoms(run, wind_and_rain=True, jets_and_temp=True, latent_
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     # Take seasonal averages
     data.coords['season'] = np.mod(data.xofyear + 5., 72.) // 18. 
@@ -134,8 +134,12 @@ def plot_climatology_zanoms(run, wind_and_rain=True, jets_and_temp=True, latent_
 if __name__ == "__main__":
     
     #plot_climatology('continent_parts_no_am', land_mask = '/scratch/rg419/python_scripts/land_era/land_era_no_america.nc')
-
-    plot_climatology_zanoms('full_qflux', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc', slp=False)
+    plot_climatology_zanoms('half_dry', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/half_shallow.nc')
+    plot_climatology_zanoms('half_bright', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/half_shallow.nc')
+    #plot_climatology_zanoms('q_shallow', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/q_shallow.nc')
+    #plot_climatology_zanoms('3q_shallow', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/3q_shallow.nc')
+    
+    #plot_climatology_zanoms('full_qflux', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc', slp=False)
     
     #plot_climatology('idealised_1cont', land_mask = '/scratch/rg419/Experiments/wavenumber_2/input/1hill.nc')
     #plot_climatology('idealised_2cont', land_mask = '/scratch/rg419/Experiments/wavenumber_2/input/2hill.nc')
@@ -143,6 +147,6 @@ if __name__ == "__main__":
     #plot_climatology('no_americas', land_mask = '/scratch/rg419/python_scripts/land_era/land_era_no_america.nc')
     #plot_climatology('frozen_am', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
     #plot_climatology('no_TIP', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology_zanoms('control_qflux', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
+    #plot_climatology_zanoms('control_qflux', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
                             
                             

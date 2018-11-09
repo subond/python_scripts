@@ -193,7 +193,7 @@ def get_edge_psi_time(data, lons, sanity_check=False, lev=500., thresh=0., intdo
         
         #plt.figure(3)
         #plt.plot(psi_max_loc.xofyear, psi_max_loc, 'x')
-        #plt.show()
+        plt.show()
     
     return edge_loc, psi_max, psi_max_loc
 

@@ -57,7 +57,7 @@ def write_land(exp, filename='land', land_mode='square',boundaries=[[20.,60.,20.
     # 1) Set-up in which a square of land is included
     if land_mode=='square':
         for blist in boundaries:
-            idx = (blist[0] <= lat_array) & (lat_array < blist[1]) & (blist[2] < lon_array) & (blist[3] > lon_array)
+            idx = (blist[0] <= lat_array) & (lat_array <= blist[1]) & (blist[2] <= lon_array) & (blist[3] > lon_array)
             land_array[idx] = 1.0
     
     # 2) Set-up in which some or all of 'original' continents are included
@@ -212,7 +212,7 @@ def write_land(exp, filename='land', land_mode='square',boundaries=[[20.,60.,20.
 
     #Write land and topography arrays to file
     topo_filename = '/scratch/rg419/Experiments/' + exp + '/input/' + filename + '.nc'
-    print topo_filename
+    print(topo_filename)
     topo_file = Dataset(topo_filename, 'w', format='NETCDF3_CLASSIC')
     lat = topo_file.createDimension('lat', nlat)
     lon = topo_file.createDimension('lon', nlon)
@@ -225,7 +225,7 @@ def write_land(exp, filename='land', land_mode='square',boundaries=[[20.,60.,20.
     topo_array_netcdf[:] = topo_array
     land_array_netcdf[:] = land_array
     topo_file.close()
-    print('Output written to: ' + topo_filename)
+    print(('Output written to: ' + topo_filename))
 
 
     #Show configuration on screen to allow checking
@@ -246,11 +246,29 @@ def write_land(exp, filename='land', land_mode='square',boundaries=[[20.,60.,20.
 
 
 if __name__ == "__main__":
-
-    #write_land('idealised_land', filename='land_extra_topo', land_mode='continents', continents=['all'], topo_mode='sauliere2012', mountains=['all'])
-    write_land('wavenumber_2', filename='1hill', land_mode='square', boundaries=[[10.,50.,0.,90.]], topo_mode='gaussian', topo_gauss=[[30.,45.,15.,7.5,4000.]])
     
-    write_land('wavenumber_2', filename='2hill', land_mode='square', boundaries=[[10.,50.,0.,90.], [10.,50.,180.,270.]], topo_mode='gaussian', topo_gauss=[[30.,45.,15.,7.5,4000.], [30.,225.,15.,7.5,4000.]])
+    #write_land('asym_aquaplanets', filename='half_shallow', land_mode='square', boundaries=[[-90.,90.,0.,180.]])
+
+    write_land('asym_aquaplanets', filename='q_shallow', land_mode='square', boundaries=[[-90.,90.,0.,90.]])
+
+    write_land('asym_aquaplanets', filename='3q_shallow', land_mode='square', boundaries=[[-90.,90.,0.,270.]])
+
+    #write_land('asym_aquaplanets', filename='half_nh_shallow', land_mode='square', boundaries=[[0.,90.,0.,180.]])
+    
+    #write_land('asym_aquaplanets', filename='half_10_shallow', land_mode='square', boundaries=[[10.,90.,0.,180.]])
+    
+    #write_land('asym_aquaplanets', filename='half_30_shallow', land_mode='square', boundaries=[[30.,90.,0.,180.]])
+        
+    #write_land('asym_aquaplanets', filename='nh_shallow', land_mode='square', boundaries=[[0.,90.,0.,360.]])
+    
+    #write_land('asym_aquaplanets', filename='10_shallow', land_mode='square', boundaries=[[10.,90.,0.,360.]])
+
+    #write_land('asym_aquaplanets', filename='30_shallow', land_mode='square', boundaries=[[30.,90.,0.,360.]])
+    
+    #write_land('idealised_land', filename='land_extra_topo', land_mode='continents', continents=['all'], topo_mode='sauliere2012', mountains=['all'])
+    #write_land('wavenumber_2', filename='1hill', land_mode='square', boundaries=[[10.,50.,0.,90.]], topo_mode='gaussian', topo_gauss=[[30.,45.,15.,7.5,4000.]])
+    
+    #write_land('wavenumber_2', filename='2hill', land_mode='square', boundaries=[[10.,50.,0.,90.], [10.,50.,180.,270.]], topo_mode='gaussian', topo_gauss=[[30.,45.,15.,7.5,4000.], [30.,225.,15.,7.5,4000.]])
     
     
     

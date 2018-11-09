@@ -4,7 +4,7 @@ Load variables for vorticity budget and save in one dataset for ease of use
 import numpy as np
 import xarray as xr
 import sh
-from physics import gradients as gr
+from data_handling_updates import gradients as gr
 from pylab import rcParams
 import matplotlib.pyplot as plt
 
@@ -25,7 +25,9 @@ data.coords['pentad'] = data.day_of_yr //5 + 1.
 data = data.groupby('pentad').mean(('day_of_yr')) 
 
 # Choose lon range
-lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= 60. and data.lon[i] < 150.]
+#lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= 60. and data.lon[i] < 150.]
+#lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= 30. and data.lon[i] < 60.]
+lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= 15. and data.lon[i] < 60.]
     
 # Calculate time mean stretching
 stretching_mean = -1.* 86400.**2. * (data.vor * data.div)
@@ -144,7 +146,7 @@ ax9.text(-7, 60, 'i)')
 
 plt.subplots_adjust(right=0.97, left=0.08, top=0.93, bottom=0.1, hspace=0.25, wspace=0.15)
     
-figname = 'vort_breakdown_era.pdf'
+figname = 'vort_breakdown_era_southafrica.pdf'
 
 plt.savefig(plot_dir + figname, format='pdf')
 plt.close()    

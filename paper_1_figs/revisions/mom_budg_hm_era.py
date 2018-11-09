@@ -5,9 +5,8 @@ Evaluate and plot momentum budget at 150 hPa - redo in line with reviewer 1s sug
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
-from data_handling import time_means, month_dic
+from data_handling_updates import time_means, month_dic, gradients as gr
 import sh
-from physics import gradients as gr
 from pylab import rcParams
 
 
@@ -36,7 +35,7 @@ def partition_advection(data, lons, lev=150):
     data['u_dudx_stat'] = (('pentad','lat'), u_dudx_stat )	
     data['u_dudx_zav']  = (('pentad','lat'), u_dudx_zav )
     
-    print 'uu terms done'
+    print('uu terms done')
     
     #Next do uv terms
     uv_trans_dy = -86400. * gr.ddy( (data.ucomp_vcomp - data.ucomp.sel(pfull=lev) * data.vcomp) , uv=True)
@@ -61,7 +60,7 @@ def partition_advection(data, lons, lev=150):
     data['v_dudy_stat'] = (('pentad','lat'), v_dudy_stat)	
     data['v_dudy_zav']  = (('pentad','lat'), v_dudy_zav )
     
-    print 'uv terms done'
+    print('uv terms done')
     
     #Finally do uw terms
     uw_trans_dp = -86400. * gr.ddp( (data.ucomp_omega - data.ucomp * data.omega).sel(lon=lons).mean('lon') )
@@ -86,7 +85,7 @@ def partition_advection(data, lons, lev=150):
     data['w_dudp_stat'] = (('pentad','lat'), w_dudp_stat)	
     data['w_dudp_zav']  = (('pentad','lat'), w_dudp_zav )	
     
-    print 'uw terms done'
+    print('uw terms done')
     
     
     
@@ -113,7 +112,7 @@ def mom_budg_hm(run, lev=150, lonin=[-1.,361.]):
         lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] or data.lon[i] < lonin[1]]
     
     #advective terms
-    partition_advection(data, lons, lev=150)
+    partition_advection(data, lons, lev=lev)
     
     #Coriolis
     omega = 7.2921150e-5
@@ -156,7 +155,7 @@ def mom_budg_hm(run, lev=150, lonin=[-1.,361.]):
     levels = np.arange(-20,21.1,2.)
     
     mn_dic = month_dic(1)
-    tickspace = range(13,72,18)
+    tickspace = list(range(13,72,18))
     labels = [mn_dic[(k+5)/6 ] for k in tickspace]
         
     # Six subplots
@@ -255,7 +254,9 @@ def mom_budg_hm(run, lev=150, lonin=[-1.,361.]):
 
 
 #mom_budg_hm('era')
-mom_budg_hm('era', lonin=[60.,150.])
+#mom_budg_hm('era', lonin=[60.,150.])
+mom_budg_hm('era', lonin=[15.,60.], lev=150)
+#mom_budg_hm('era', lonin=[110.,120.])
 
 
 

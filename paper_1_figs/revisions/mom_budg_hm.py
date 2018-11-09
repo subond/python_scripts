@@ -36,7 +36,7 @@ def partition_advection(data, lons, lev=150):
     data['u_dudx_stat'] = (('xofyear','lat'), u_dudx_stat )	
     data['u_dudx_zav']  = (('xofyear','lat'), u_dudx_zav )
     
-    print 'uu terms done'
+    print('uu terms done')
     
     #Next do uv terms
     uv_trans_dy = -86400. * gr.ddy( (data.ucomp_vcomp - data.ucomp * data.vcomp).sel(pfull=lev) , uv=True)
@@ -61,7 +61,7 @@ def partition_advection(data, lons, lev=150):
     data['v_dudy_stat'] = (('xofyear','lat'), v_dudy_stat)	
     data['v_dudy_zav']  = (('xofyear','lat'), v_dudy_zav )
     
-    print 'uv terms done'
+    print('uv terms done')
     
     #Finally do uw terms
     uw_trans_dp = -86400. * gr.ddp( (data.ucomp_omega - data.ucomp * data.omega).sel(lon=lons).mean('lon') )
@@ -86,7 +86,7 @@ def partition_advection(data, lons, lev=150):
     data['w_dudp_stat'] = (('xofyear','lat'), w_dudp_stat)	
     data['w_dudp_zav']  = (('xofyear','lat'), w_dudp_zav )	
     
-    print 'uw terms done'
+    print('uw terms done')
     
     
     
@@ -100,7 +100,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
         
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/'+run+'.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/'+run+'.nc')
     
     if lonin[1]>lonin[0]:
         lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] and data.lon[i] < lonin[1]]
@@ -146,7 +146,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     levels = np.arange(-20,21.1,2.)
     
     mn_dic = month_dic(1)
-    tickspace = range(13,72,18)
+    tickspace = list(range(13,72,18))
     labels = [mn_dic[(k+5)/6 ] for k in tickspace]
     
     # Six subplots
@@ -262,8 +262,8 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
 #mom_budg_hm('full_qflux')
 mom_budg_hm('full_qflux', lonin=[60.,150.])
 #mom_budg_hm('full_qflux', lonin=[345.,45.])
-#mom_budg_hm('flat_qflux', lonin=[60.,150.])
-#mom_budg_hm('am_qflux', lonin=[60.,150.])
-
+mom_budg_hm('flat_qflux', lonin=[60.,150.])
+mom_budg_hm('am_qflux', lonin=[60.,150.])
+mom_budg_hm('ap_20_qflux', lonin=[60.,150.])
 
 

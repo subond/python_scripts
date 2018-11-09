@@ -76,14 +76,14 @@ def vort_eq(run, month, filename='plev_daily', period_fac=1., rot_fac=1., do_ss=
         ds.coords['xofyear'] = np.mod( ds.time/day_fac -1., 360.*period_fac) //5 + 1.  
         dsout = ds.groupby('xofyear').mean(('time'))
     
-    try:
-        fileout = '/disca/share/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'  
-        fileout = fileout % month
-        dsout.to_netcdf(path=fileout)
-    except:
-        fileout = '/disca/share/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'  
-        fileout = fileout % month
-        dsout.to_netcdf(path=fileout)
+    #try:
+    #    fileout = '/disca/share/rg419/Data_moist/' + run + '/run%03d/vort_eq.nc'  
+    #    fileout = fileout % month
+    #    dsout.to_netcdf(path=fileout)
+    #except:
+    fileout = '/disca/share/rg419/Data_moist/' + run + '/run%04d/vort_eq.nc'  
+    fileout = fileout % month
+    dsout.to_netcdf(path=fileout)
     
     print ('data written to ', fileout)
 
@@ -126,7 +126,7 @@ def save_vort_eq(run, months, do_ss=False):
 if __name__ == "__main__":
     
     #rot_fac=[0.75,1.,1.25,1.5]
-    for run in ['ob_40.000']:   
+    for run in ['mld_20', 'mld_15']:   
         k=0
         for i in range(121,481):
             vort_eq(run, i)

@@ -17,10 +17,10 @@ def precip_centroid_ll(data, lat_bound=45., res=0.01):
                lat_bound = lat range to integrate over
                lonin = longitude range to use'''
     
-    area = cell_area(42, '/scratch/rg419/Isca/')   # Area of grid cells
-    
-    # Add area to dataset
-    data['area'] = (('lat','lon'), area)
+    if not 'area' in data.data_vars:
+        area = cell_area(42, '/scratch/rg419/Isca/')   # Area of grid cells
+        # Add area to dataset
+        data['area'] = (('lat','lon'), area)
         
     # Get total precip
     try:

@@ -54,7 +54,8 @@ def evap_parts(run, lonin=[-1.,361.], do_make_sym=True):
     rho_a = 95000./Rd/data.temp.sel(pfull=950.) / (1 + (Rv - Rd)/Rd*data.sphum.sel(pfull=950.))
     
     # difference between lowest level and surface specific humidities
-    q_s = Rd/Rv * 610.78/100000. * np.exp(-L/Rv * (1/data.temp.sel(pfull=950.) - 1/273.16))
+    #q_s = Rd/Rv * 610.78/100000. * np.exp(-L/Rv * (1/data.temp.sel(pfull=950.) - 1/273.16))
+    q_s = Rd/Rv * 610.78/100000. * np.exp(-L/Rv * (1/data.t_surf - 1/273.16))
     
     # Look at an average over a zonal region
     v_a = v_a.sel(lon=lons).mean('lon')
@@ -79,7 +80,7 @@ def evap_parts(run, lonin=[-1.,361.], do_make_sym=True):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
 
     
-    qdiff.plot.contourf(x='xofyear', y='lat', levels=np.arange(-3.,3.1,0.5), ax=ax1, extend = 'both', add_labels=False)
+    qdiff.plot.contourf(x='xofyear', y='lat', ax=ax1, extend = 'both', add_labels=False, levels=np.arange(-10.,10.1,1.))
     ax1.set_title('q$_{a}$ - q$_{s}$')
     
     rho_a.plot.contourf(x='xofyear', y='lat', levels=np.arange(1.1,1.26,0.01), ax=ax2, extend = 'both', add_labels=False)

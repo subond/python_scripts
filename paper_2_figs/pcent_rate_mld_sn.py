@@ -163,6 +163,7 @@ if __name__ == "__main__":
     p_cent_grad_scatter(runs_sn[0], days=True, color=colors[0], ax=ax1, linewidth=1.)
     # Do other plots, plot sn_1.000 run as thicker line
     j=1
+    period_fac = [0.25, 0.5, 2., 3., 4.]
     for run in runs_sn[1:]:
         if run == 'sn_1.000':
             p_cent_grad_scatter(run, color='k', ax=ax1, linewidth=2.)    

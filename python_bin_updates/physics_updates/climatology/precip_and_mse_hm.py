@@ -21,7 +21,7 @@ def pick_lons(data, lonin):
         lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= lonin[0] or data.lon[i] < lonin[1]]
     return lons
     
-def precip_mse_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, plot_type=None, precip_contour=8., p_cent=True, mse_max=True, month_labels=True):
+def precip_mse_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, plot_type=None, precip_contour=8., p_cent=True, mse_max=True, month_labels=True, lat_bound=45.):
     
     lons = pick_lons(data, lonin)
     
@@ -42,7 +42,7 @@ def precip_mse_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, plot_type=N
         cs = mse_plot.sel(pfull=850.).plot.contour(ax=ax_in, x='xofyear', y='lat', levels=np.arange(200.,401.,10.), add_labels = False, colors='0.7', add_colorbar=False, linewidths=2)
         plt.clabel(cs, fontsize=15, inline_spacing=-1, fmt= '%1.0f')
         if p_cent:
-            data = precip_centroid(data,lonin=lonin)
+            data = precip_centroid(data,lonin=lonin, lat_bound=lat_bound)
             data.p_cent.plot.line(color='w', ax=ax_in)
             ax_in.set_xlabel('')
         
@@ -50,7 +50,7 @@ def precip_mse_plot(data, ax_in, lonin=[-1.,361.], do_xlabels=False, plot_type=N
         # No mse, plot precip and precip centroid
         f1 = precip_plot.plot.contourf(ax=ax_in, x='xofyear', y='lat', levels = np.arange(2.,15.,2.), add_colorbar=False, add_labels=False, extend='max', cmap='Blues', linewidth=2)
         if p_cent:
-            data = precip_centroid(data,lonin=lonin)
+            data = precip_centroid(data,lonin=lonin, lat_bound=lat_bound)
             data.p_cent.plot.line(color='k', ax=ax_in, linewidth=2)
             ax_in.set_xlabel('')
             

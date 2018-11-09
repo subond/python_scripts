@@ -144,7 +144,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     mom_sum = fv_local + fv_mean + dphidx + mom_mean + mom_trans + mom_stat + mom_cross
     
     levels = np.arange(-20,21.1,2.)
-    levels = np.arange(-2,2.1,0.2)
+    #levels = np.arange(-2,2.1,0.2)
     
     mn_dic = month_dic(1)
     tickspace = list(range(13,72,18))
@@ -194,7 +194,7 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
 
     
     if lonin == [-1.,361.]:
-        figname = 'zon_mom_budg_' +run+ '_zoom.pdf'
+        figname = 'zon_mom_budg_' +run+ '.pdf'
     else:
         figname = 'zon_mom_budg_' + run + '_' + str(int(lonin[0]))+ '_' + str(int(lonin[1])) + '.pdf'
     
@@ -209,16 +209,16 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
 #mom_budg_hm('rt_1.750', rot_fac=1.75)
 #mom_budg_hm('rt_2.000', rot_fac=2.0)
 
-mom_budg_hm('sn_1.000')
-mom_budg_hm('sine_sst_10m')
-mom_budg_hm('sn_1_sst_zs')
-mom_budg_hm('sine_sst_10m_zs')
+mom_budg_hm('half_shallow', lonin=[340,20])
+mom_budg_hm('half_shallow', lonin=[70,110])
+mom_budg_hm('half_shallow', lonin=[160,200])
+mom_budg_hm('half_shallow', lonin=[250,290])
 #mom_budg_hm('ap10_qflux')
 #mom_budg_hm('ap10_co2')
 
 #mom_budg_hm('ap_2')
 #mom_budg_hm('full_qflux')
-#mom_budg_hm('full_qflux', lonin=[60.,150.])
+mom_budg_hm('full_qflux', lonin=[60.,150.])
 #mom_budg_hm('sine_sst_10m')
 #mom_budg_hm('sn_1.000')
 #mom_budg_hm('dry_ep', plot_precip=False)

@@ -19,7 +19,7 @@ land = xr.open_dataset( land_file)
 
 def mom_budg_fun(run, lev=150):
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/'+run+'.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/'+run+'.nc')
     
     #First do uu terms
     uu_trans_dx = -86400. * gr.ddx( (data.ucomp_sq - data.ucomp**2).sel(pfull=lev) ) # <u'u'> = <uu> - <u><u>

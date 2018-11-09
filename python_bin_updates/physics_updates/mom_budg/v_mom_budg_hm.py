@@ -127,14 +127,14 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
     #Geopotential gradient
     dphidy = gr.ddy(data.height.sel(pfull=lev), vector=False)
     dphidy = -86400. * 9.8 * dphidy.sel(lon=lons).mean('lon')
-    fu_ageo = fu_local + dphidy
+    fu_ageo = fu_local + fu_mean + dphidy
     
     dvdt = gr.ddt(data.vcomp.sel(pfull=lev)).sel(lon=lons).mean('lon')*86400.
     
     metric = (-86400.* data.ucomp_sq * np.tan(data.lat * np.pi/180.)/6376.0e3).sel(pfull=lev).sel(lon=lons).mean('lon')
     vert_term = (-86400.*data.vcomp_omega/6376.0e3).sel(pfull=lev).sel(lon=lons).mean('lon')
     
-    mom_mean = data.w_dvdp_zav #data.u_dvdx_zav + data.v_dvdy_zav + data.w_dvdp_zav
+    mom_mean = data.u_dvdx_zav + data.v_dvdy_zav + data.w_dvdp_zav
     mom_cross = data.u_dvdx_cross1 + data.v_dvdy_cross1 + data.w_dvdp_cross1 + data.u_dvdx_cross2 + data.v_dvdy_cross2 + data.w_dvdp_cross2
     mom_cross1 = data.u_dvdx_cross1 + data.v_dvdy_cross1 + data.w_dvdp_cross1 
     mom_cross2 = data.u_dvdx_cross2 + data.v_dvdy_cross2 + data.w_dvdp_cross2
@@ -148,8 +148,8 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
         
     mom_sum = fu_local + fu_mean + dphidy + mom_mean + mom_trans + mom_stat + mom_cross + metric
     
-    levels = np.arange(-40,41.1,4.)
-    #levels = np.arange(-300.,300.1,30.)
+    #levels = np.arange(-40,41.1,4.)
+    levels = np.arange(-300.,300.1,30.)
     
     mn_dic = month_dic(1)
     tickspace = list(range(13,72,18))
@@ -196,35 +196,21 @@ def mom_budg_hm(run, lev=150, filename='plev_pentad', timeav='pentad', period_fa
 
     
     if lonin == [-1.,361.]:
-        figname = 'merid_mom_budg_' +run+ '_zoom.pdf'
+        figname = 'merid_mom_budg_' +run+ '.pdf'
     else:
         figname = 'merid_mom_budg_' + run + '_' + str(int(lonin[0]))+ '_' + str(int(lonin[1])) + '.pdf'
     
     plt.savefig(plot_dir + figname, format='pdf')
     plt.close()
 
-mom_budg_hm('rt_0.500', rot_fac=0.5)
-mom_budg_hm('rt_0.750', rot_fac=0.75)
-mom_budg_hm('sn_1.000')
-mom_budg_hm('rt_1.250', rot_fac=1.25)
-mom_budg_hm('rt_1.500', rot_fac=1.5)
-mom_budg_hm('rt_1.750', rot_fac=1.75)
-mom_budg_hm('rt_2.000', rot_fac=2.0)
 
-#mom_budg_hm('sn_1.000', lev=150.)
 
-#mom_budg_hm('ap10_qflux')
-#mom_budg_hm('ap10_co2')
+mom_budg_hm('ap_2')
+mom_budg_hm('ap_20')
+mom_budg_hm('half_shallow')
+mom_budg_hm('half_shallow', lonin=[90.,180.])
+mom_budg_hm('half_shallow', lonin=[270.,360.])
 
-#mom_budg_hm('ap_2')
-#mom_budg_hm('full_qflux')
-#mom_budg_hm('full_qflux', lonin=[60.,150.])
-#mom_budg_hm('sine_sst_10m')
-#mom_budg_hm('sn_1.000')
-#mom_budg_hm('dry_ep', plot_precip=False)
-#mom_budg_hm('dry_zs', plot_precip=False)
-#mom_budg_hm('flat_qflux', lonin=[60.,150.])
-#mom_budg_hm('am_qflux', lonin=[60.,150.])
 
 
 

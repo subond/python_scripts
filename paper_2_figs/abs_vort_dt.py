@@ -71,9 +71,9 @@ def abs_vort_dt_plot(run, ax, rot_fac=1., lev=150., dvordt_flag=False):
         f1 = dvordt.plot.contourf(ax=ax, x='xofyear', y='lat', levels=np.arange(-0.06,0.07,0.01), add_colorbar=False, add_labels=False)
     else:
         f1 = dvordtvor.plot.contourf(ax=ax, x='xofyear', y='lat', levels=np.arange(-0.05,0.055,0.005),  add_colorbar=False, add_labels=False)
-    psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
-    psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
-    psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
+    #psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
+    #psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
+    #psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
     data.p_cent.plot.line(ax=ax, color='k', linewidth=2)
     ax.set_ylim([-60,60])
     ax.set_ylabel('Latitude')
@@ -216,7 +216,7 @@ def abs_vort_at_pcent_plot(runs, rot_facs, colors, ax=None, lev=150., filename='
             #ax.plot(pcent.sel(xofyear=times), dvordtvor_pcent.sel(xofyear=times), color=colors[i], linewidth=2)
             ax.set_ylim([-0.04,0.02])
             #ax.set_ylim([-0.1,0.1])
-            ax.set_ylabel('$1/\zeta$*d$\zeta$/dt at ITCZ')
+            ax.set_ylabel('$1/(f+\zeta)$*d$\zeta$/dt at ITCZ')
     
     ax.set_xlabel('ITCZ migration rate')
     ax.set_xlim([0.,0.6])
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     # Start figure with 4 subplots
     fig, ((ax1), (ax2), (ax3)) = plt.subplots(3, 1)
     
-    control = 'sn_1.000'
+    control = 'sine_sst_10m'#'sn_1.000'
     abs_vort_dt_plot(control, ax=ax1, dvordt_flag=True)
 
     psi_mean = psi_mean_clim(control)
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     box = ax2.get_position()
     ax2.set_position([box.x0, box.y0, box.width * 0.85, box.height])
     ax2.set_xlabel('Pentad')
-    ax2.set_ylabel('ITCZ latitude')
+    ax2.set_ylabel('ITCZ migration rate')
     ax2_twin.set_ylabel('d$\zeta$/dt at ITCZ', color='b')
     ax2.set_xlim([0,72])
     ax2.set_xticks(np.arange(0,73,12))

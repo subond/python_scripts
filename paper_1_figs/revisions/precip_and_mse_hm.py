@@ -1,6 +1,6 @@
 # Plot the surface temperature and precipitation through the year for the monsoon region
 
-from data_handling import month_dic
+from data_handling_updates import month_dic
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -25,7 +25,10 @@ mkdir(plot_dir)
 
 data = xr.open_dataset('/scratch/rg419/obs_and_reanalysis/gpcp_detrendedpentads.nc')
 
-lons = pick_lons(data, [60.,150.])
+#lons = pick_lons(data, [60.,150.]) #'Asia'
+#lons = pick_lons(data, [15.,60.]) # South Africa
+lons = pick_lons(data, [100.,150.]) # East Asia
+lons = pick_lons(data, [70.,100.]) # India
 
 data['totp'] = data.precip_clim.sel(lon=lons).mean('lon')
 
@@ -49,6 +52,6 @@ plt.xlim((1,73))
 plt.xlabel('')
 plt.xticks(tickspace, labels, rotation=25)
 plt.tight_layout() 
-plt.savefig(plot_dir+'precip_mse_hm.pdf', format='pdf')
+plt.savefig(plot_dir+'precip_mse_hm_india.pdf', format='pdf')
 plt.close()        
 

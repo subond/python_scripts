@@ -2,7 +2,7 @@
 19/01/2017
 A series of functions to help in plotting max overturning at 500 hPa for cross-equatorial cell vs the latitude of max near surface mse, or vs precip centroid, or vs lat at which cell drops below some threshold
 Generally the same as the previous iteration of better_regime_fig (now better_regime_fig_old2) but allowing steady state data to be plotted too.
-NB the better_regime_fig_ss.py includes neater labelling, so you might want to use this sometimes.
+NB the better_regime_fig_ss.py includes neater labelling, so you might want to use this sometimes. Also update where data is stored now this has moved to disca
 
 """
 
@@ -43,13 +43,17 @@ def set_vars(data, plottype=None, lonin=[-1.,361.], thresh=0., nh=True):
         
 
 
-def load_vars(runs, plottype=None, lonin=[-1.,361.], thresh=0., nh=True):
+def load_vars(runs, plottype=None, lonin=None, thresh=0., nh=True):
     # load variables for multiple runs - useful for steady state runs
     vars_out = []
+    if lonin==None:
+        lonin=[-1.,361.]*len(runs)
+    i=0
     for run in runs:
-        data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
-        run_vars = set_vars(data, plottype=plottype, lonin=lonin, thresh=thresh, nh=nh)
+        data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+        run_vars = set_vars(data, plottype=plottype, lonin=lonin[i], thresh=thresh, nh=nh)
         vars_out.append(run_vars)
+        i=i+1
     return vars_out
 
 
@@ -117,11 +121,11 @@ def plot_regime(vars_in, varcolor='k', symbol='x', guide=10, do_linefit_l=False,
     if j1<i:  # if edge_loc data is missing j1 may be less than i, so in this case use j2.
         j=j2
     else:
-        j = min([j1,j2])
+        #j = min([j1,j2])
+        j=j2
     print((i,j))
     
     # Plot ITCZ lat on x axis, cell strength on y over this time period
-    
     plt.plot(edge_loc[i:j], psi_max[i:j], symbol, color=varcolor, ms=10, mew=2)
     if include_withdrawal:
         plt.plot(edge_loc[j:], psi_max[j:], symbol, color=varcolor, ms=8, mew=2, alpha=0.5)
@@ -212,30 +216,56 @@ if __name__ == "__main__":
     
     # Note to future self STOP BEING LAZY, DON'T JUST CREATE PLOTS HERE. You use this script so much it really just makes a mess when you keep deleting things and losing your records!
     
-    runs_ss = ['sine_sst_10m_ss_'+str(i) for i in range(180,89,-10)]
+    
+    # Oops I did it again, I made plots in the function, will fix this later?
+    runs = ['half_shallow', 'half_shallow_5', 'half_shallow_10']
+    
+    vars_out = load_vars(runs, lonin=[[170.,190.]]*3)
+    plot_multiple(vars_out, 'half_shallow_expts_eastcoast', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[350.,10.]]*3)
+    plot_multiple(vars_out, 'half_shallow_expts_westcoast', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[80.,100.]]*3)
+    plot_multiple(vars_out, 'half_shallow_expts_land', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[260.,280.]]*3)
+    plot_multiple(vars_out, 'half_shallow_expts_ocean', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    
+    runs = ['half_shallow', 'q_shallow', '3q_shallow']
 
-    m = len(runs_ss)
+    #overturning_hm('q_shallow', regions=[[350,10], [35,45], [80,100], [215,235]])
+    #overturning_hm('3q_shallow', regions=[[350,10], [125,145], [260,280], [305,325]])
+    vars_out = load_vars(runs, lonin=[[170.,190.],[80.,100.],[260.,280.]])
+    plot_multiple(vars_out, 'part_shallow_expts_eastcoast', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[350.,10.]]*3)
+    plot_multiple(vars_out, 'part_shallow_expts_westcoast', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[80.,100.],[35.,55.],[125.,145]])
+    plot_multiple(vars_out, 'part_shallow_expts_land', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
+    vars_out = load_vars(runs, lonin=[[260.,280.],[215.,235.],[305.,325.]])
+    plot_multiple(vars_out, 'part_shallow_expts_ocean', latmax=30., psirange=[50, 550], vc=['C0','C1','C2'], iw=[True]*3)
     
-    runs_te = ['sine_sst_10m']
-    runs = runs_te + runs_ss
-    s = ['x'] + ['s']*m
-    flip = [False] + [True]*m
-    
-    vars_out = load_vars(runs, nh=False)
-    plot_multiple(vars_out, 'sine_sst_and_ss', s=s, psirange=[50, 550], latmax=30, show_coeff=True, flip=flip)
-    
-    
-    
-    runs_ss = ['sn_1.000_ss_'+str(i) for i in range(180,241,10)]
+    #runs_ss = ['sine_sst_10m_ss_'+str(i) for i in range(180,89,-10)]
 
-    m = len(runs_ss)
+    #m = len(runs_ss)
     
-    runs_te = ['sn_1.000']
-    runs = runs_te + runs_ss
-    s = ['x'] + ['s']*m
+    #runs_te = ['sine_sst_10m']
+    #runs = runs_te + runs_ss
+    #s = ['x'] + ['s']*m
+    #flip = [False] + [True]*m
     
-    vars_out = load_vars(runs)
-    plot_multiple(vars_out, 'sn_1.000_and_ss', s=s, psirange=[50, 550], latmax=30, show_coeff=True)
+    #vars_out = load_vars(runs, nh=False)
+    #plot_multiple(vars_out, 'sine_sst_and_ss', s=s, psirange=[50, 550], latmax=30, show_coeff=True, flip=flip)
+    
+    
+    
+    #runs_ss = ['sn_1.000_ss_'+str(i) for i in range(180,241,10)]
+
+    #m = len(runs_ss)
+    
+    #runs_te = ['sn_1.000']
+    #runs = runs_te + runs_ss
+    #s = ['x'] + ['s']*m
+    
+    #vars_out = load_vars(runs)
+    #plot_multiple(vars_out, 'sn_1.000_and_ss', s=s, psirange=[50, 550], latmax=30, show_coeff=True)
 
 
 

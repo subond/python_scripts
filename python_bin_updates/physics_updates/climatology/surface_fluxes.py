@@ -6,6 +6,8 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from pylab import rcParams
 import sh
+from climatology import precip_centroid
+from hadley_cell import mass_streamfunction
 
 g = 9.8
 cp = 287.04/2*7
@@ -23,14 +25,24 @@ def pick_lons(data, lonin):
 
 def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym=True):
     
-    rcParams['figure.figsize'] = 12, 10
-    rcParams['font.size'] = 16
+    print('what?')
+    rcParams['figure.figsize'] = 15, 10
+    rcParams['font.size'] = 14
     
     plot_dir = '/scratch/rg419/plots/surface_fluxes/'
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+    
+    #Calculate psi to overplot
+    psi = mass_streamfunction(data, a=6376.0e3, dp_in=50.)
+    psi /= 1.e9
+    psi = make_sym(psi, asym=True)
+    
+    # Make precip symmetric and find the precip centroid
+    data['precipitation'] = make_sym(data.precipitation)
+    precip_centroid(data)
     
     data['flux_lw_up'] = data.t_surf ** 4. * mc.stefan
     data['dTdt'] = gr.ddt(data.t_surf) * 86400. * scale_fac
@@ -42,16 +54,16 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym
     lons = pick_lons(data, lonin)
     
     if not diff_run == None:
-        diff_data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + diff_run + '.nc')
+        diff_data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + diff_run + '.nc')
         data = (data - diff_data).sel(lon=lons).mean('lon')
         levels_t = np.arange(-10.,11.,1.)
         levels_dt = np.arange(-0.5,0.51,0.05)
         levels_flux = np.arange(-80.,81.,5.)
     else:
         data = data.sel(lon=lons).mean('lon')
-        levels_t = np.arange(250.,311.,1.)
-        levels_dt = np.arange(-0.5,0.51,0.01)
-        levels_flux = np.arange(-300.,305.,10.)
+        levels_t = np.arange(270.,306.,2.5)
+        levels_dt = np.arange(-0.3,0.31,0.05)
+        levels_flux = np.arange(-300.,305.,20.)
     
 
     
@@ -82,21 +94,40 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym
     (-1.*data.flux_lhe).plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax6, extend = 'both', add_labels=False, cmap='RdBu_r')
     ax6.set_title('Downward latent heat flux')
     
-    for ax in left_column:
-        ax.set_ylabel('Latitude')
-    for ax in bottom_row:
-        ax.set_xlabel('Pentad')
+    
+    i=0
+    labels=['a)','b)','c)','d)','e)','f)']
     for ax in all_plots:
         ax.grid(True,linestyle=':')
         ax.set_xticks([12,24,36,48,60,72])
         ax.set_ylim([-60,60])
-        
+        ax.set_yticks([-60,-30,0,30,60])
+        ax.text(-8, 60., labels[i])
+        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
+        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
+        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
+        data.p_cent.plot.line(ax=ax, color='k', linewidth=2)
+        ax.set_ylabel('')
+        ax.set_xlabel('')
+        i=i+1
     
-    if not diff_run == None:
-        plt.savefig(plot_dir + 'surface_fluxes_' + run + '_' + diff_run + '.pdf', format='pdf')
+    for ax in left_column:
+        ax.set_ylabel('Latitude')
+    for ax in bottom_row:
+        ax.set_xlabel('Pentad')
         
+    plt.subplots_adjust(left=0.07, right=0.97, top=0.97, bottom=0.05, hspace=0.2, wspace=0.1)
+    
+    if lonin == [-1.,361.]:
+        if not diff_run == None:
+            plt.savefig(plot_dir + 'surface_fluxes_' + run + '_' + diff_run + '.pdf', format='pdf')
+        
+        else:
+            plt.savefig(plot_dir + 'surface_fluxes_' + run + '.pdf', format='pdf')
     else:
-        plt.savefig(plot_dir + 'surface_fluxes_' + run + '.pdf', format='pdf')
+        figname = plot_dir + 'surface_fluxes_' + run + '_' + str(int(lonin[0]))+ '_' + str(int(lonin[1])) + '.pdf'
+        plt.savefig(figname, format='pdf')
+        
     plt.close()
 
 
@@ -110,7 +141,7 @@ def surf_cooling_plot(run, lonin=[-1.,361.], mld=10.):
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     lons = pick_lons(data, lonin)
     
@@ -158,7 +189,7 @@ def int_flux_plot(run, lonin=[-1.,361.], mld=10.):
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     lons = pick_lons(data, lonin)
     
@@ -223,7 +254,7 @@ def fixed_sst_imbalance(run, lonin=[-1.,361.], mld=10.):
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     lons = pick_lons(data, lonin)
     
@@ -270,10 +301,9 @@ if __name__ == "__main__":
     #    surf_cooling_plot(run)
     #surf_cooling_plot('ap_2', mld=2.)
     #surf_cooling_plot('ap_20', mld=20.)
-    surface_plot('sn_1.000', scale_fac=1.)
-    surface_plot('sn_2.000', scale_fac=2.)
-    surface_plot('sn_4.000', scale_fac=4.)
-    surface_plot('sn_8.000', scale_fac=8.)
-    surface_plot('sn_0.500', scale_fac=0.5)
-    surface_plot('sn_0.250', scale_fac=1.25)
+    surface_plot('half_shallow', lonin=[340,20])
+    surface_plot('half_shallow', lonin=[70,110])
+    surface_plot('half_shallow', lonin=[160,200])
+    surface_plot('half_shallow', lonin=[250,290])
+
     

@@ -1,13 +1,12 @@
 # 13/12/2017 Calculate lag and gain of SST relative to insolation
 
-from data_handling import month_dic
+from data_handling_updates import month_dic, gradients as gr, model_constants as mc
 import numpy as np
 from numpy.fft import fft
 import xarray as xr
 import matplotlib.pyplot as plt
 from pylab import rcParams
 import sh
-from physics import model_constants as mc, gradients as gr
 
 
 rcParams['figure.figsize'] = 6, 10
@@ -64,7 +63,7 @@ def get_fft(data, sanity_check=False):
 
 def gain_and_lag(run):
     
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
     sst_amp, sst_phase = get_fft(data.t_surf)
     sw_amp, sw_phase = get_fft(data.flux_sw)
@@ -88,12 +87,10 @@ def gain_and_lag(run):
 if __name__ == "__main__":
 
 
-    gain_and_lag('idealised_land_ea_only')
-    gain_and_lag('idealised_land_in_only')
-    gain_and_lag('idealised_land_no_af')
-    gain_and_lag('idealised_land_no_am')
-    gain_and_lag('idealised_land_no_aus')
-    gain_and_lag('idealised_land_no_sa')
+    gain_and_lag('half_shallow')
+    gain_and_lag('half_shallow_5')
+    gain_and_lag('half_shallow_10')
+
     
     
     

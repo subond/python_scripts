@@ -1,5 +1,3 @@
-# 11/12/2017 Plot parts of evaporative flux to try to see where structure comes from.
-
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -132,19 +130,9 @@ def plot_climatology(run, wind_and_rain=True, jets_and_temp=True, latent_and_lw=
 
 if __name__ == "__main__":
     
+    plot_climatology('half_dry', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/half_shallow.nc')
+    plot_climatology('half_bright', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/half_shallow.nc')
+    #plot_climatology('half_shallow', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/half_shallow.nc')
+    #plot_climatology('q_shallow', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/q_shallow.nc')
+    #plot_climatology('3q_shallow', land_mask = '/scratch/rg419/Experiments/asym_aquaplanets/input/3q_shallow.nc')
     
-    #plot_climatology('idealised_1cont', land_mask = '/scratch/rg419/Experiments/wavenumber_2/input/1hill.nc')
-    #plot_climatology('idealised_2cont', land_mask = '/scratch/rg419/Experiments/wavenumber_2/input/2hill.nc')
-    
-    #plot_climatology('no_americas', land_mask = '/scratch/rg419/python_scripts/land_era/land_era_no_america.nc')
-    #plot_climatology('frozen_am_0.4', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    #plot_climatology('no_TIP', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_0.500', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_0.750', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_1.250', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_1.500', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_1.750', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-    plot_climatology('control_qflux_2.000', land_mask = '/scratch/rg419/Isca/input/land_masks/era_land_t42.nc')
-                            
-                            

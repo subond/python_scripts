@@ -12,6 +12,9 @@ from pylab import rcParams
 import scipy.interpolate as spint
 from hadley_cell import mass_streamfunction
 
+Rd = 287.04
+Rv = 461.50
+cp = Rd/2*7
 
 def vdtdy_plot(run, ax, lev=850.):
 
@@ -31,6 +34,11 @@ def vdtdy_plot(run, ax, lev=850.):
     convTtotheta=(1000./data.pfull)**(2./7.)
     theta = data.temp*convTtotheta
     
+    rho = lev*100./Rd/data.temp.sel(pfull=lev) / (1 + (Rv - Rd)/Rd*data.sphum.sel(pfull=lev))
+    
+    expansion_term = (1./rho/cp * data.omega.sel(pfull=lev)).mean('lon') * 86400.
+    #expansion_term = (1./rho/cp ).mean('lon') * 86400.
+    
     v = data.vcomp.sel(pfull=lev) # v
     T_dy = -86400. * gr.ddy( data.temp.sel(pfull=lev), vector=False)  # dTdy
     vdTdy = v.mean('lon') * T_dy.mean('lon') # [v][dTdy]
@@ -49,9 +57,11 @@ def vdtdy_plot(run, ax, lev=850.):
     
     
     #f1 = (dvtdy_colav).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False, levels=np.arange(-30.,33.,3.), extend='both', add_colorbar=False)
-    #f1 = (vdTdy+wdTdp).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False, levels=np.arange(-5.,5.5,0.5), extend='both', add_colorbar=False)
+    #f1 = (vdTdy).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False, levels=np.arange(-5.,5.5,0.5), extend='both', add_colorbar=False)
     f1 = (vdTdy+wdTdp).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False, levels=np.arange(-3.,3.1,0.5), extend='both', add_colorbar=False)
     #f1 = (dTdt).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False, levels=np.arange(-0.2,0.21,0.02), extend='both', add_colorbar=False)
+    #f1 = (vdTdy + wdTdp + expansion_term).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False,  extend='both', add_colorbar=False)
+    #f1 = (-1.*expansion_term-T_dp.mean('lon')).plot.contourf(ax=ax, x='xofyear', y='lat', add_labels=False,  extend='both', add_colorbar=False)
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
     psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
@@ -67,6 +77,7 @@ def vdtdy_plot(run, ax, lev=850.):
 
 #for run in ['rt_0.500', 'rt_0.750', 'rt_1.250', 'rt_1.500', 'rt_1.750', 'rt_2.000']:
 for run in ['sine_sst_10m']:
+#for run in ['ap_2']:
     plot_dir = '/scratch/rg419/plots/paper_2_figs/adv_tend_rot/'
     mkdir = sh.mkdir.bake('-p')
     mkdir(plot_dir)

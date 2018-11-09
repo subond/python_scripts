@@ -22,7 +22,7 @@ mkdir(plot_dir)
 
 def precip_wind(run, ax_in, pentad):
         
-    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     data['rain'] = (('xofyear','lat','lon'), (data.convection_rain + data.condensation_rain)*86400.)
     
     lons = [data.lon[i] for i in range(len(data.lon)) if data.lon[i] >= 60. and data.lon[i] < 150.]

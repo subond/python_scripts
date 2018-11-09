@@ -36,7 +36,7 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
     
     
     #Load in vorticity budget term means
-    data = xr.open_dataset('/disca/restore/gv2scratch/rg419/Data_moist/climatologies/qflux_ss/vort_eq_'+run+'.nc')
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/vort_eq_'+run+'.nc')
     if run in ['ap_2', 'full_qflux']:
         data_vort = data 
         data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/vort_eq_uv'+run+'.nc')
@@ -69,7 +69,9 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
     horiz_md_mean = -86400.**2. * (data.ucomp * dvordx + data.vcomp * dvordy)
     
     # Calculate divergence and stretching term
-    div = gr.ddx(data.ucomp) + gr.ddy(data.vcomp)
+    u_dx = gr.ddx(data.ucomp)
+    v_dy = gr.ddy(data.vcomp)
+    div = u_dx + v_dy
     stretching_mean = -86400.**2. * vor * div
     
     
@@ -77,18 +79,24 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
         #Keep lon dimension if want a steady state lat-lon plot
         horiz_md_av = horiz_md_mean
         stretching_av = stretching_mean
+        dvordx_av = dvordx
         dvordy_av = dvordy
         vor_av = vor*86400.
         v_av = data.vcomp
         div_av = div*86400.
+        u_dx_av = u_dx*86400.
+        v_dy_av = v_dy*86400.
     else:
         # Take zonal mean of all over specified longitude range
         horiz_md_av = horiz_md_mean.sel(lon=lons).mean('lon')
         stretching_av = stretching_mean.sel(lon=lons).mean('lon')
+        dvordx_av = dvordx.sel(lon=lons).mean('lon')
         dvordy_av = dvordy.sel(lon=lons).mean('lon')
         vor_av = vor.sel(lon=lons).mean('lon')*86400.
         v_av = data.vcomp.sel(lon=lons).mean('lon')
         div_av = div.sel(lon=lons).mean('lon')*86400.
+        u_dx_av = u_dx.sel(lon=lons).mean('lon')*86400.
+        v_dy_av = v_dy.sel(lon=lons).mean('lon')*86400.
     
     # If run is ap_2 or full_qflux, then vorticity budget and velocities were saved separately. Load the budget up now
     if run in ['ap_2','full_qflux']:
@@ -130,10 +138,13 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
     # Specify output dictionary to be written
     output_dict = {'horiz_md': (dim_list, horiz_md_av),
                  'stretching':  (dim_list, stretching_av),
+                     'dvordx': (dim_list, dvordx_av),
                      'dvordy': (dim_list, dvordy_av),
                           'v': (dim_list, v_av),
                         'vor': (dim_list, vor_av),
-                        'div':  (dim_list, div_av)}
+                        'div':  (dim_list, div_av),
+                        'u_dx':  (dim_list, u_dx_av),
+                        'v_dy':  (dim_list, v_dy_av)}
                  
     if not (planetary_only or no_eddies):
         if run in ['ap_2','full_qflux']:
@@ -161,7 +172,7 @@ def vort_budg_terms(run, lonin=[-1.,361.], do_ss=False, rot_fac=1., planetary_on
     
 
 
-def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labels=True, rot_fac=1., no_eddies=False, add_psi=True):
+def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labels=True, rot_fac=1., no_eddies=False, add_psi=False):
     '''Plot vorticity budget Hovmoller. RG 3/11/2017
        Imputs: run = run_name
                lev = level to plot
@@ -249,7 +260,11 @@ def vort_eq_hm(run, lev=150., lonin=[-1.,361.], planetary_only=False, month_labe
     ax5.set_title('Divergence', fontsize=17)
     ax5.text(-7, 60, 'e)')
     
-    ds.vor.plot.contourf(x='xofyear', y='lat', levels=np.arange(-12.,13.,1.), ax=ax6, extend = 'both', add_labels=False)
+    #ds.v_dy.plot.contourf(x='xofyear', y='lat', levels=np.arange(-1.,1.1,0.1), ax=ax5, extend = 'both', add_labels=False)
+    #ax5.set_title('dv/dy', fontsize=17)
+    #ax5.text(-7, 60, 'e)')
+    
+    ds.vor.plot.contourf(x='xofyear', y='lat', levels=np.arange(-12.,13.,2.), ax=ax6, extend = 'both', add_labels=False)
     if planetary_only:
         ax6.set_title('Planetary vorticity', fontsize=17)
     else:
@@ -570,19 +585,15 @@ if __name__ == "__main__":
     #vort_eq_hm('full_qflux', lonin=[60.,150.])
     #vort_eq_hm('full_qflux', lonin=[60.,150.], planetary_only=True)
     
-    #vort_eq_hm('ap_2', planetary_only=True)
+    vort_eq_hm('mld_20')
     #vort_eq_hm('ob_40.000')
     #vort_eq_hm('sn_1_sst_zs')
-    runs = ['qflux_0_100', 'qflux_0_200', 'qflux_0_300',
-            'qflux_5_100', 'qflux_5_200', 'qflux_5_300',
-            'qflux_10_100', 'qflux_10_200', 'qflux_10_300',
-            'qflux_15_100', 'qflux_15_200', 'qflux_15_300',
-            'qflux_20_100', 'qflux_20_200', 'qflux_20_300',
-            'qflux_25_100', 'qflux_25_200', 'qflux_25_300']
-    for run in runs:
-        vort_eq_ll(run)
 
-    #vort_eq_hm('rt_0.750', rot_fac=0.75)
+
+    #vort_eq_hm('half_shallow', lonin=[340,20])
+    #vort_eq_hm('half_shallow', lonin=[70,110])
+    #vort_eq_hm('half_shallow', lonin=[160,200])
+    #vort_eq_hm('half_shallow', lonin=[250,290])
     #vort_eq_hm('rt_1.500', rot_fac=1.5)
     
     #vort_eq_hm('rt_0.500', rot_fac=0.5)

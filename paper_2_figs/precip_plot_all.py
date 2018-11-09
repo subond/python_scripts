@@ -41,8 +41,13 @@ def precip_psi_plot(run, ax, label='a)'):
     
     return f1
 
+#subsolar_point = -23.439*np.cos(np.arange(0.,361.,1.)*np.pi/180.)
+
 f1 = precip_psi_plot('sn_1.000', ax=ax1)
+#ax1.plot(np.arange(0.,361.,1.)/5.,subsolar_point,'m')
 precip_psi_plot('sine_sst_10m', ax=ax2, label='b)')
+#precip_psi_plot('sn_1.000_evap_fluxes_fixed_wind', ax=ax2, label='b)')
+
 precip_psi_plot('sn_1_sst_zs', ax=ax3, label='c)')
 
 ax3.set_xticks([12,24,36,48,60,72])
