@@ -6,13 +6,21 @@ import xarray as xr
 import sh
 import numpy as np
 import matplotlib.pyplot as plt
-from data_handling_updates import gradients as gr, model_constants as mc
+from data_handling_updates import gradients as gr, model_constants as mc, make_sym
 from climatology import precip_centroid
+from hadley_cell import get_edge_psi
 from pylab import rcParams
 from hadley_cell import mass_streamfunction
+from pcent_rate_max import p_cent_rate_max
 
-
-def fig_8(run, ax, pentad=45):
+    
+def get_latmax(data_in):
+    data_max = data_in.max('lat')
+    data_max_lat = data_in.lat.values[data_in.argmax('lat').values]
+    data_max_lat = xr.DataArray(data_max_lat, coords=[data_in.xofyear], dims=['xofyear'])
+    return data_max, data_max_lat
+        
+def fig_8(run, ax, pentad=45, rotfac=1., dayfac=1.):
 
     data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
     
@@ -32,61 +40,83 @@ def fig_8(run, ax, pentad=45):
     sinphi = np.sin(data.lat * np.pi/180.)
     cosphi = np.cos(data.lat * np.pi/180.)
     
+    
+    w_850 = data.omega.sel(pfull=850.).mean('lon')
+    w_max, w_max_lat = get_latmax(-1.*w_850)
     theta_850 = theta.sel(pfull=850.).mean('lon')
-    theta_max = theta_850.max('lat')
-    theta_max_lat = data.lat.values[theta_850.argmax('lat').values]
-    theta_max_lat = xr.DataArray(theta_max_lat, coords=[data.xofyear], dims=['xofyear'])
+    theta_max, theta_max_lat = get_latmax(theta_850)
+    
     sinphimax = np.sin(theta_max_lat * np.pi/180.)
     
-    theta_m = theta_max - 300.*mc.omega**2.*mc.a**2./(2.*mc.grav*14000.) * (sinphi**2.-sinphimax**2.)**2./cosphi**2.
+    theta_m = theta_max - 300.*(mc.omega * rotfac)**2.*mc.a**2./(2.*mc.grav*14000.) * (sinphi**2.-sinphimax**2.)**2./cosphi**2.
     
-    theta_rc = theta_850 + heating_theta.sel(pfull=850.).mean('lon') * 86400.
-
-    theta_adv = theta_850 + adv_heating.sel(pfull=850.) * 86400. 
-
-    theta_net = theta_850 + dthetadt.sel(pfull=850.) * 86400. * 10.
+    def adj_theta(theta_in, adj_by, dayfac=dayfac):
+        if 'lon' in adj_by.coords:
+            return theta_in + adj_by.sel(pfull=850.).mean('lon') * 86400. * dayfac
+        else:
+            return theta_in + adj_by.sel(pfull=850.) * 86400. * dayfac
     
-    lats = [data.lat[i] for i in range(len(data.lat)) if data.lat[i] >= -30. and data.lat[i] <= 30.]
     
-    theta_850.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k')
-    theta_m.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='-.')
+    theta_rc = adj_theta(theta_850, heating_theta)
+    theta_adv = adj_theta(theta_850, adv_heating)
+    theta_net = adj_theta(theta_850, dthetadt, dayfac=20.)
+    
+    lats = [data.lat[i] for i in range(len(data.lat)) if data.lat[i] >= -60. and data.lat[i] <= 60.]
+    
+    theta_m.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='0.7')
     theta_rc.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='--')
-    theta_adv.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='r', linestyle='-.')
-    theta_net.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='C1', linestyle='--')
+    theta_adv.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='-.')
+    theta_850.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='C0')
+    theta_net.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='C2')
+    ax.plot([w_max_lat.sel(xofyear=pentad),w_max_lat.sel(xofyear=pentad)], [295,315], color='0.7', linestyle=':')
     ax.set_title('')
     ax.set_xlabel('')
-    #ax.set_ylim(285.,315.)
-    ax.set_ylim(290.,310.)
+    ax.set_ylim(295.,315.)
+    ax.set_xlim(-35.,35.)
     ax.grid(True,linestyle=':')
     ax.set_ylabel('$\Theta$, K')
 
 
-plot_dir = '/scratch/rg419/plots/paper_2_figs/revisions/'
-mkdir = sh.mkdir.bake('-p')
-mkdir(plot_dir)
-rcParams['figure.figsize'] = 5.5, 7.
-rcParams['font.size'] = 14
+def plot_bs_fig_8(run, pentads=[35,40,45,50], rotfac=1.):
+    plot_dir = '/scratch/rg419/plots/paper_2_figs/revisions/heatbudg/'
+    mkdir = sh.mkdir.bake('-p')
+    mkdir(plot_dir)
+    rcParams['figure.figsize'] = 5.5, 7.
+    rcParams['font.size'] = 14
     
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
-
-fig_8('sn_1.000_evap_fluxes_heattrans', ax=ax1, pentad=35)
-fig_8('sn_1.000_evap_fluxes_heattrans', ax=ax2, pentad=40)
-fig_8('sn_1.000_evap_fluxes_heattrans', ax=ax3, pentad=45)
-fig_8('sn_1.000_evap_fluxes_heattrans', ax=ax4, pentad=50)
-
-ax4.set_xlabel('Latitude')
-
-ax1.text(-55, 315., 'a)')
-ax2.text(-55, 315., 'b)')
-ax3.text(-55, 315., 'c)')
-ax4.text(-55, 315., 'd)')
-
-plt.subplots_adjust(left=0.15, right=0.95, top=0.97, bottom=0.1)
-
-plt.savefig(plot_dir+'sb08_fig8.pdf', format='pdf')
-plt.close()
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+    data['precipitation'] = make_sym(data.precipitation)
+    precip_centroid(data)       # Locate precipitation centroid
+    dpcentdt = gr.ddt(data.p_cent) * 86400.
+    p_cent_pos = np.abs(data.p_cent.where(dpcentdt>=0.))
+       
+    eq_time = p_cent_pos.xofyear[p_cent_pos.argmin('xofyear').values]
+    peak_rate_time = dpcentdt.xofyear[dpcentdt.argmax('xofyear').values]
+    max_lat_time = data.p_cent.xofyear[data.p_cent.argmax('xofyear').values]
     
-
+    edge_loc, psi_max, psi_max_loc = get_edge_psi(data, lev=850., thresh=0., intdown=True)
+    
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
+    axes = [ax1,ax2,ax3,ax4]
+    pentads = [eq_time.values, peak_rate_time.values, np.floor((peak_rate_time.values + max_lat_time.values)/2.), max_lat_time.values]
+    
+    for i in range(4):
+        fig_8(run, ax=axes[i], pentad=pentads[i], rotfac=rotfac)
+        axes[i].text(20, 310., 'Pentad ' + str(int(pentads[i])))
+        edge = edge_loc.sel(xofyear=pentads[i])
+        axes[i].plot([edge, edge], [295., 315.], 'k:')
+    
+    ax4.set_xlabel('Latitude')
+    
+    #ax1.text(-55, 315., 'a)')
+    #ax2.text(-55, 315., 'b)')
+    #ax3.text(-55, 315., 'c)')
+    #ax4.text(-55, 315., 'd)')
+    
+    plt.subplots_adjust(left=0.15, right=0.95, top=0.97, bottom=0.1)
+    plt.savefig(plot_dir+'sb08_fig8_' + run + '.pdf', format='pdf')
+    plt.close()
+    
 
 def fig_9(run, ax, pentad=40):
 
@@ -120,42 +150,83 @@ def fig_9(run, ax, pentad=40):
     div_vt_eddy_int = gr.ddy(vt_eddy_int, vector=True)
     
     
+    w_850 = data.omega.sel(pfull=850.).mean('lon')
+    w_max, w_max_lat = get_latmax(-1.*w_850)
+    
     heating_theta_int = column_int(heating_theta)
     dthetadt_int = column_int(dthetadt)
     
     lats = [data.lat[i] for i in range(len(data.lat)) if data.lat[i] >= -40. and data.lat[i] <= 40.]
     
-    heating_theta_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k')
-    dthetadt_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='r')
+    dthetadt_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='C2')
+    heating_theta_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='--')
     #wdtdp_mean_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='C1')
     #vdtdy_mean_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='--')
-    (vdtdy_mean_int + wdtdp_mean_int).sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='--')
+    (vdtdy_mean_int + wdtdp_mean_int).sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='-.')
     #(-dthetadt_int + vdtdy_mean_int + wdtdp_mean_int + heating_theta_int + div_vt_eddy_int).sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle=':')
-    (vdtdy_mean_int + wdtdp_mean_int + heating_theta_int + div_vt_eddy_int).sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle=':')
-    div_vt_eddy_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle='-.')
+    #(vdtdy_mean_int + wdtdp_mean_int + heating_theta_int + div_vt_eddy_int).sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle=':')
+    div_vt_eddy_int.sel(xofyear=pentad, lat=lats).plot(ax=ax, color='k', linestyle=':')
+    ax.plot([w_max_lat.sel(xofyear=pentad),w_max_lat.sel(xofyear=pentad)], [-500.,500.], color='0.7', linestyle=':')
     ax.set_title('')
     ax.set_xlabel('')
     ax.set_ylim(-500.,500.)
-    ax.set_xlim(-30.,30.)
+    ax.set_xlim(-35.,35.)
     ax.grid(True,linestyle=':')
     ax.set_ylabel('Heating rate, W/m$^2$')
     
 
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
+def plot_bs_fig_9(run, pentads=[35,40,45,50]):
+    plot_dir = '/scratch/rg419/plots/paper_2_figs/revisions/heatbudg/'
+    mkdir = sh.mkdir.bake('-p')
+    mkdir(plot_dir)
+    
+    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+    data['precipitation'] = make_sym(data.precipitation)
+    precip_centroid(data)       # Locate precipitation centroid
+    dpcentdt = gr.ddt(data.p_cent) * 86400.
+    p_cent_pos = np.abs(data.p_cent.where(dpcentdt>=0.))
+       
+    eq_time = p_cent_pos.xofyear[p_cent_pos.argmin('xofyear').values]
+    peak_rate_time = dpcentdt.xofyear[dpcentdt.argmax('xofyear').values]
+    max_lat_time = data.p_cent.xofyear[data.p_cent.argmax('xofyear').values]
+    
+    edge_loc, psi_max, psi_max_loc = get_edge_psi(data, lev=850., thresh=0., intdown=True)
+    
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
+    axes = [ax1,ax2,ax3,ax4]
+    pentads = [eq_time.values, peak_rate_time.values, np.floor((peak_rate_time.values + max_lat_time.values)/2.), max_lat_time.values]
+    
+    for i in range(4):
+        fig_9(run, ax=axes[i], pentad=pentads[i])
+        axes[i].text(20, 315., 'Pentad ' + str(int(pentads[i])))
+        edge = edge_loc.sel(xofyear=pentads[i])
+        axes[i].plot([edge, edge], [-500., 500.], 'k:')
+    
+    ax4.set_xlabel('Latitude')
+    
+    ax1.text(-55, 500., 'a)')
+    ax2.text(-55, 500., 'b)')
+    ax3.text(-55, 500., 'c)')
+    ax4.text(-55, 500., 'd)')
+    
+    plt.subplots_adjust(left=0.15, right=0.95, top=0.97, bottom=0.1)
+    plt.savefig(plot_dir+'sb08_fig9_' + run + '.pdf', format='pdf')
+    plt.close()
 
-fig_9('sn_1.000_evap_fluxes_heattrans', ax=ax1, pentad=35)
-fig_9('sn_1.000_evap_fluxes_heattrans', ax=ax2, pentad=40)
-fig_9('sn_1.000_evap_fluxes_heattrans', ax=ax3, pentad=45)
-fig_9('sn_1.000_evap_fluxes_heattrans', ax=ax4, pentad=50)
 
-ax4.set_xlabel('Latitude')
 
-ax1.text(-55, 500., 'a)')
-ax2.text(-55, 500., 'b)')
-ax3.text(-55, 500., 'c)')
-ax4.text(-55, 500., 'd)')
+plot_bs_fig_8('sn_1.000_evap_fluxes_heattrans')
+plot_bs_fig_8('rt_2.000_heatbudg', rotfac=2.)
+plot_bs_fig_8('rt_0.500_heatbudg', rotfac=0.5)
+plot_bs_fig_8('rt_0.750_heatbudg', rotfac=0.75)
+plot_bs_fig_8('rt_1.250_heatbudg', rotfac=1.25)
+plot_bs_fig_8('rt_1.500_heatbudg', rotfac=1.5)
+plot_bs_fig_8('rt_1.750_heatbudg', rotfac=1.75)
 
-plt.subplots_adjust(left=0.15, right=0.95, top=0.97, bottom=0.1)
-
-plt.savefig(plot_dir+'sb08_fig9.pdf', format='pdf')
-plt.close()
+plot_bs_fig_9('sn_1.000_evap_fluxes_heattrans')
+plot_bs_fig_9('rt_2.000_heatbudg')
+plot_bs_fig_9('rt_0.500_heatbudg')
+plot_bs_fig_9('rt_0.750_heatbudg')
+plot_bs_fig_9('rt_1.250_heatbudg')
+plot_bs_fig_9('rt_1.500_heatbudg')
+plot_bs_fig_9('rt_1.750_heatbudg')
