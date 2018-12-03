@@ -64,7 +64,12 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym
         levels_dt = np.arange(-0.3,0.31,0.05)
         levels_flux = np.arange(-300.,305.,20.)
     
-
+    declination = np.pi/180. * 23.439 * np.sin(2.*np.pi * (0.75 + (data.xofyear - 0.5)/72.))
+    h0 = np.arccos(-np.tan(data.lat*np.pi/180.)*np.tan(declination))
+    insolation = 1360./np.pi * (h0 * np.sin(data.lat*np.pi/180.)*np.sin(declination) + np.cos(data.lat*np.pi/180.)*np.cos(declination)*np.sin(h0))
+    #insolation.plot.contour(x='xofyear', y='lat', extend = 'both', add_labels=False, colors='0.7', levels=np.arange(0.,600.,50.))
+    #plt.ylim(-60.,60.)
+    #plt.show()
     
     f, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, sharex='col', sharey='row')
     left_column = [ax1,ax3,ax5]
@@ -92,8 +97,7 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym
     
     (-1.*data.flux_lhe).plot.contourf(x='xofyear', y='lat', levels=levels_flux, ax=ax6, extend = 'both', add_labels=False, cmap='RdBu_r')
     ax6.set_title('Downward latent heat flux')
-    
-    
+
     i=0
     labels=['a)','b)','c)','d)','e)','f)']
     for ax in all_plots:
@@ -102,10 +106,17 @@ def surface_plot(run, lonin=[-1.,361.], diff_run=None, scale_fac=1., do_make_sym
         ax.set_ylim([-60,60])
         ax.set_yticks([-60,-30,0,30,60])
         ax.text(-8, 60., labels[i])
-        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
-        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
-        psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
-        data.p_cent.plot.line(ax=ax, color='k', linewidth=2)
+        if run == 'sn_1.000_wishe_fixed_wind' and ax==ax3:
+            insolation.plot.contour(x='xofyear', y='lat', levels=np.arange(0.,600.,50.), ax=ax3, extend = 'both', add_labels=False, colors='0.7')
+        elif run == 'sn_1.000_wishe_fixed_wind':
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
+        else:
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
+            psi.sel(pfull=500).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-1000.,1010.,1000.), add_labels=False, colors='0.5', linewidths=2)
+            data.p_cent.plot.line(ax=ax, color='k', linewidth=2)
         ax.set_ylabel('')
         ax.set_xlabel('')
         i=i+1
@@ -297,8 +308,9 @@ if __name__ == "__main__":
     #surf_cooling_plot('ap_20', mld=20.)
     #surface_plot('sn_1.000', scale_fac=1.)
     #surface_plot('sn_1.000_evap_fluxes', scale_fac=1.)
-    surface_plot('sn_1.000_evap_fluxes_heattrans', scale_fac=1.)
-    surface_plot('sn_1.000_evap_fluxes_fixed_wind', scale_fac=1.)
+    #surface_plot('sn_1.000_evap_fluxes_heattrans', scale_fac=1.)
+    #surface_plot('sn_1.000_evap_fluxes_fixed_wind', scale_fac=1.)
+    surface_plot('sn_1.000_wishe_fixed_wind', scale_fac=1.)
     #surface_plot('sn_1.000_evap_fluxes_qflux', scale_fac=1.)
     #surface_plot('sn_2.000', scale_fac=2.)
     #surface_plot('sn_4.000', scale_fac=4.)

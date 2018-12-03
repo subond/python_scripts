@@ -133,11 +133,15 @@ def plot_bs_mombudg(run, pentads=[35,40,45,50], rotfac=1.):
     plt.close()
 
 
+plot_bs_mombudg('mld_2.5_heatbudg')
+plot_bs_mombudg('mld_5_heatbudg')
+plot_bs_mombudg('mld_15_heatbudg')
+plot_bs_mombudg('mld_20_heatbudg')
 
-plot_bs_mombudg('sn_1.000_evap_fluxes_heattrans')
-plot_bs_mombudg('rt_2.000_heatbudg', rotfac=2.)
-plot_bs_mombudg('rt_0.500_heatbudg', rotfac=0.5)
-plot_bs_mombudg('rt_0.750_heatbudg', rotfac=0.75)
-plot_bs_mombudg('rt_1.250_heatbudg', rotfac=1.25)
-plot_bs_mombudg('rt_1.500_heatbudg', rotfac=1.5)
-plot_bs_mombudg('rt_1.750_heatbudg', rotfac=1.75)
+#plot_bs_mombudg('sn_1.000_evap_fluxes_heattrans')
+#plot_bs_mombudg('rt_2.000_heatbudg', rotfac=2.)
+#plot_bs_mombudg('rt_0.500_heatbudg', rotfac=0.5)
+#plot_bs_mombudg('rt_0.750_heatbudg', rotfac=0.75)
+#plot_bs_mombudg('rt_1.250_heatbudg', rotfac=1.25)
+#plot_bs_mombudg('rt_1.500_heatbudg', rotfac=1.5)
+#plot_bs_mombudg('rt_1.750_heatbudg', rotfac=1.75)

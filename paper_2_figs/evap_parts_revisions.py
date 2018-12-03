@@ -112,4 +112,5 @@ def evap_parts(run, lonin=[-1.,361.], do_make_sym=True):
 if __name__ == "__main__":
     
     evap_parts('sn_1.000_evap_fluxes_heattrans')
-    evap_parts('sn_1.000_evap_fluxes_fixed_wind')
+    #evap_parts('sn_1.000_evap_fluxes_fixed_wind')
+    evap_parts('sn_1.000_wishe_fixed_wind')

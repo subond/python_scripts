@@ -116,6 +116,30 @@ def set_plot_features(ax, title='', do_legend=True, legend_labels=[], fontsize=9
 
 
 
+def fit_data(rots, transition_lats, line_rots):
+    
+    cos4lat = np.cos(transition_lats * np.pi/180.)**4.
+    
+    A = np.array([ 1./rots**2., np.ones(rots.shape) ])
+    #consts = np.linalg.lstsq( A.T, psi_min )[0] # obtaining the parameters
+    #resids = np.linalg.lstsq( A.T, psi_min )[1] # obtaining the parameters
+
+    model = sm.OLS(cos4lat, A.T)
+    result=model.fit()
+    consts = result.params
+    std_err = result.bse
+    
+    #print result.summary()
+    
+    print('=== Coeffs ===')
+    print(consts[0], consts[1])
+    print('=== Std Errs ===')
+    print(2*std_err[0], 2*std_err[1])
+    
+    line = 180./np.pi * np.arccos( (consts[0]/line_rots**2. + consts[1])**0.25 )
+    
+    return line, consts
+
 if __name__ == "__main__":
     
     # Set plotting directory
@@ -213,6 +237,7 @@ if __name__ == "__main__":
         lower_15 = np.percentile(err_15,2.5,axis=2)
         upper_15 = np.percentile(err_15,97.5,axis=2)
         
+        
         ax2.errorbar(rots, max_rate_rot_5.values,
                  yerr=[max_rate_rot_5.values-lower_5[:,0], upper_5[:,0]-max_rate_rot_5.values], 
                  linestyle='none', color='r', marker='.',mew=2, ms=8)
@@ -228,11 +253,11 @@ if __name__ == "__main__":
         ax4.errorbar(rots, max_rate_lat_rot_5.values,
                      yerr=[max_rate_lat_rot_5.values-lower_5[:,1], upper_5[:,1]-max_rate_lat_rot_5.values], 
                      linestyle='none', color='r', marker='.',mew=2, ms=8, label='5m')
-                 
+        
         ax4.errorbar(rots, max_rate_lat_rot_15.values,
                      yerr=[max_rate_lat_rot_15.values-lower_15[:,1], upper_15[:,1]-max_rate_lat_rot_15.values], 
                      linestyle='none', color='b', marker='.',mew=2, ms=8, label='15m')
-    
+        
         ax4.errorbar(rots, max_rate_lat_rot.values,
                      yerr=[max_rate_lat_rot.values-lower[:,1], upper[:,1]-max_rate_lat_rot.values], 
                      linestyle='none', color='k', marker='.',mew=2, ms=8, label='10m')
@@ -251,6 +276,9 @@ if __name__ == "__main__":
     f_crit = max_rate_lat_rot[2].values * rots[2]
     lat_predictions = f_crit/np.arange(0.,2.5,0.01)
     ax4.plot(np.arange(0.,2.5,0.01), lat_predictions,'k')
+    
+    line, consts = fit_data(rots[1:], max_rate_lat_rot.values[1:], np.arange(0.,2.5,0.01))
+    ax4.plot(np.arange(0.,2.5,0.01), line, '0.7')
     
     lat_predictions = f_crit/rots
     

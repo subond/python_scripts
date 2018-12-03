@@ -128,17 +128,27 @@ def isca_onset(run, lonin=[110.,120.], onset_def='SCS', print_onset=False):
 
 if __name__ == "__main__":
     
+    #isca_onset('sn_1.000', lonin=[0., 360.])
+    #isca_onset('sn_1.000', lonin=[0., 360.], onset_def='BOB')
+    #isca_onset('sn_1.000', lonin=[0., 360.], onset_def='ISM')
+    
+    for run in [ 'mld_5', 'mld_15']:
+        isca_onset(run, lonin=[0., 360.])
+        isca_onset(run, lonin=[0., 360.], onset_def='BOB')
+        isca_onset(run, lonin=[0., 360.], onset_def='ISM')
+    
+    
     #isca_onset('half_shallow', lonin=[170.,180.])
     #isca_onset('half_shallow', lonin=[150.,160.])
     #isca_onset('half_shallow', lonin=[100.,140.])
         
-    isca_onset('half_shallow', onset_def='BOB', lonin=[170.,180.])
-    isca_onset('half_shallow', onset_def='BOB', lonin=[150.,160.])
-    isca_onset('half_shallow', onset_def='BOB', lonin=[100.,140.])
+    #isca_onset('half_shallow', onset_def='BOB', lonin=[170.,180.])
+    #isca_onset('half_shallow', onset_def='BOB', lonin=[150.,160.])
+    #isca_onset('half_shallow', onset_def='BOB', lonin=[100.,140.])
     
-    isca_onset('half_shallow', onset_def='ISM', lonin=[170.,180.])
-    isca_onset('half_shallow', onset_def='ISM', lonin=[150.,160.])
-    isca_onset('half_shallow', onset_def='ISM', lonin=[100.,140.])
+    #isca_onset('half_shallow', onset_def='ISM', lonin=[170.,180.])
+    #isca_onset('half_shallow', onset_def='ISM', lonin=[150.,160.])
+    #isca_onset('half_shallow', onset_def='ISM', lonin=[100.,140.])
     
     
     

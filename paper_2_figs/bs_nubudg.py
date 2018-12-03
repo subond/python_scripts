@@ -25,8 +25,8 @@ def fig_8(run, ax, pentad=45, lev=200., dayfac=3., rotfac=1.):
     
     dnudy = gr.ddy(nu, vector=False)
     dnudp = gr.ddp(nu)
-    dwdp = gr.ddy(data.omega)
-    dvdp = gr.ddy(data.vcomp)
+    dwdp = gr.ddp(data.omega)
+    dvdp = gr.ddp(data.vcomp)
     
     dnudt = gr.ddt(nu)
     
@@ -127,12 +127,16 @@ def plot_bs_nubudg(run, pentads=[35,40,45,55], rotfac=1.):
     plt.savefig(plot_dir+'sb08_nubudg_fig8_' + run + '.pdf', format='pdf')
     plt.close()
 
+plot_bs_nubudg('mld_2.5_heatbudg')
+plot_bs_nubudg('mld_5_heatbudg')
+plot_bs_nubudg('mld_15_heatbudg')
+plot_bs_nubudg('mld_20_heatbudg')
 
-plot_bs_nubudg('sn_1.000_evap_fluxes_heattrans')
-plot_bs_nubudg('rt_2.000_heatbudg', rotfac=2.)
-plot_bs_nubudg('rt_0.500_heatbudg', rotfac=0.5)
-plot_bs_nubudg('rt_0.750_heatbudg', rotfac=0.75)
-plot_bs_nubudg('rt_1.250_heatbudg', rotfac=1.25)
-plot_bs_nubudg('rt_1.500_heatbudg', rotfac=1.5)
-plot_bs_nubudg('rt_1.750_heatbudg', rotfac=1.75)
+#plot_bs_nubudg('sn_1.000_evap_fluxes_heattrans')
+#plot_bs_nubudg('rt_2.000_heatbudg', rotfac=2.)
+#plot_bs_nubudg('rt_0.500_heatbudg', rotfac=0.5)
+#plot_bs_nubudg('rt_0.750_heatbudg', rotfac=0.75)
+#plot_bs_nubudg('rt_1.250_heatbudg', rotfac=1.25)
+#plot_bs_nubudg('rt_1.500_heatbudg', rotfac=1.5)
+#plot_bs_nubudg('rt_1.750_heatbudg', rotfac=1.75)
 #plot_bs_nubudg('sn_1_sst_zs')

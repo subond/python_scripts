@@ -13,7 +13,7 @@ import scipy.interpolate as spint
 from hadley_cell import mass_streamfunction
 
     
-def rossby_plot(run, ax, rot_fac=1., lev=200., type='vor_only'):
+def rossby_plot(run, ax, rot_fac=1., lev=200., type='vor_only', plottype='rossby'):
     '''Plot dvordt or 1/vor * dvordt'''
     
     #Load data
@@ -53,7 +53,9 @@ def rossby_plot(run, ax, rot_fac=1., lev=200., type='vor_only'):
     elif type=='full':
         rossby = (-1.*(metric + vor + vertical_term)/f).mean('lon')
     levels=np.arange(-0.9,1.0,0.3)
-    #levels=np.arange(-1.,1.1,0.5)
+    if plottype=='drodt':
+        rossby = gr.ddt(rossby) * 84600.
+        levels=np.arange(-0.1,0.1,0.01)
     f1 = rossby.plot.contourf(ax=ax, x='xofyear', y='lat', levels=levels, add_colorbar=False, add_labels=False, extend='both')
     psi.sel(pfull=lev).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(-500.,0.,100.), add_labels=False, colors='0.7', linewidths=2, linestyles='--')
     psi.sel(pfull=lev).plot.contour(ax=ax, x='xofyear', y='lat', levels=np.arange(0.,510.,100.), add_labels=False, colors='0.7', linewidths=2)
@@ -108,6 +110,13 @@ if __name__ == "__main__":
         rossby_plot(run, ax1, rot_fac = rots[i], type='vertical')
         plt.savefig(plot_dir+'rossby_no_' + run + '_vertical.pdf', format='pdf')
         plt.close()
+        
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        rossby_plot(run, ax1, rot_fac = rots[i], type='full', plottype='drodt')
+        plt.savefig(plot_dir+'rossby_no_' + run + '_drodt.pdf', format='pdf')
+        plt.close()
+        
         i=i+1
     
     
