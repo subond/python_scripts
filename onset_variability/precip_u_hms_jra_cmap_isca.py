@@ -12,13 +12,9 @@ from climatology import scsm_onset
 rcParams['figure.figsize'] = 12, 6
 rcParams['font.size'] = 14
 
-plot_dir = '/scratch/rg419/plots/scs_monsoon/'
+plot_dir = '/scratch/rg419/plots/onset_variability/'
 mkdir = sh.mkdir.bake('-p')
 mkdir(plot_dir)
-
-data = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/vcomp_daily/atmos_daily_together.nc', chunks={'time': 30})
-data = data.sel(lev=85000.)
-data.to_netcdf('/disca/share/rg419/jra_vcomp_daily_850.nc')
 
 
 def pentad_mean_climatology(data, years):  # Function to get pentad of year
@@ -30,57 +26,49 @@ def pentad_mean_climatology(data, years):  # Function to get pentad of year
             pentad = np.insert(pentad, 10, 2)    
         else:
             pentad = np.repeat(np.arange(1., 74.), 5)    
-        np.concatenate((pentad_years, pentad))
-        print(pentad_years.shape)
+        pentad_years = np.concatenate((pentad_years, pentad))
         
     data = data.assign_coords(pentad = ('time', pentad_years))
-    print(data.pentad_years.values[0:720])
     
-    data = data.groupby('pentad').mean(('time'))
+    data_pentads = data.groupby('pentad').mean(('time'))
     
     return data_pentads
 
 
 def precip_u_hms_jra(lonin=[110.,120.]):
     
-    data_precip = xr.open_dataset('/disca/share/rg419/CMAP_precip.pentad.mean.nc')
-    #data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_200.nc')
-    data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_850.nc')
+    data_precip = xr.open_dataset('/disca/share/rg419/CMAP_precip.pentad.mean.nc', chunks={'time': 30})
+    data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_850.nc', chunks={'time': 30})
     data_u = data_u['var33'].load().loc['1958-01':'2016-12']
-    #data_u_clim = data_u.groupby('time.dayofyear').mean('time')
-    #print(data_u_clim)
 
     # v has different time coord to u, presumably due to how Stephen has downloaded/averaged. I think the two are equivalent, so just substitute the time dimension into v
-    data_v_temp = xr.open_dataset('/disca/share/rg419/jra_vcomp_daily_200.nc')
-    data_v = xr.DataArray(data_v_temp.var34.values, coords=data_u.coords, dims=data_u.dims)
-    
-    #data_u = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/ucomp_daily/atmos_daily_together.nc')
-    #data_v = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/vcomp_daily/atmos_daily_together.nc')
-    
+    data_v_temp = xr.open_dataset('/disca/share/rg419/jra_vcomp_daily_850.nc', chunks={'time': 30})
+    data_v = xr.DataArray(data_v_temp.sel(lev=85000.).var34.values, coords={'time': data_u.time, 'lat': data_u.lat, 'lon': data_u.lon}, dims=('time','lat','lon'))    
     print('files opened')
     
     data_precip.coords['pentad'] = (('time'), np.tile(np.arange(1,74),38))
     data_precip = data_precip.groupby('pentad').mean('time')
     
-    data_u = pentad_mean_climatology(data_u, np.arange(1979,2017))
-    data_v = pentad_mean_climatology(data_v, np.arange(1979,2017))
+    data_u = pentad_mean_climatology(data_u, np.arange(1958,2017))
+    data_v = pentad_mean_climatology(data_v, np.arange(1958,2017))
     
     print('pentad means taken, plotting')
     
-    lons_precip = [data_precip.lon[i].values for i in range(len(data_precip.lon)) if data_precip.lon[i] >= lonin[0] and data_precip.lon[i] < lonin[1]]
-    lons_jra = [data_u.lon[i].values for i in range(len(data_u.lon)) if data_u.lon[i] >= lonin[0] and data_u.lon[i] < lonin[1]]
+    lons_precip = [data_precip.lon[i].values for i in range(len(data_precip.lon)) if data_precip.lon[i] >= lonin[0] and data_precip.lon[i] <= lonin[1]]
+    lons_jra = [data_u.lon[i].values for i in range(len(data_u.lon)) if data_u.lon[i] >= lonin[0] and data_u.lon[i] <= lonin[1]]
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2 , sharex='col', sharey='row')
 
     data_precip.precip.sel(lon=lons_precip).mean('lon').plot.contourf(ax=ax1, x='pentad', y='lat', levels = np.arange(2.,15.,2.), add_colorbar=False, add_labels=False, cmap='Blues')
     data_precip.precip.sel(lon=lons_precip).mean('lon').plot.contour(ax=ax1, x='pentad', y='lat', levels = np.arange(6.,1006.,1000.), colors='k', add_labels=False)
     
-    u_850 = data_u.var33.sel(lon=lons_jra, lev=85000.).mean('lon')
-    v_850 = data_v.var34.sel(lon=lons_jra, lev=85000.).mean('lon')
+    u_850 = data_u.sel(lon=lons_jra).mean('lon')
+    v_850 = data_v.sel(lon=lons_jra).mean('lon')
         
-    u_850.plot.contourf(ax=ax3, x='xofyear', y='lat', cmap = 'Greys', levels=np.arange(0.,1001.,1000.), add_labels=False, add_colorbar=False, extend='neither')    
-    b = ax3.quiver(u_850.xofyear[::2], u_850.lat, u_850[:,::2], v_850[:,::2], scale=200.)
-    
+    u_850.plot.contourf(ax=ax3, x='pentad', y='lat', cmap = 'Greys', levels=np.arange(0.,1001.,1000.), add_labels=False, add_colorbar=False, extend='both')    
+    b = ax3.quiver(u_850.pentad[::2], u_850.lat, u_850.T[:,::2], v_850.T[:,::2], scale=200.)
+    ax3.set_xlim(0.,73.)
+
     print('JRA and CMAP plotted, open Isca data')
     
     data_isca = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/sn_1.000.nc')
@@ -91,7 +79,7 @@ def precip_u_hms_jra(lonin=[110.,120.]):
     u_850 = data_isca.ucomp.sel(pfull=850.).mean('lon')
     v_850 = data_isca.vcomp.sel(pfull=850.).mean('lon')
     
-    u_850.plot.contourf(ax=ax4, x='xofyear', y='lat', cmap = 'Greys', levels=np.arange(0.,1001.,1000.), add_labels=False, add_colorbar=False, extend='neither')
+    u_850.plot.contourf(ax=ax4, x='xofyear', y='lat', cmap = 'Greys', levels=np.arange(0.,1001.,1000.), add_labels=False, add_colorbar=False, extend='both')
     b1 = ax4.quiver(data_isca.xofyear[::2], data_isca.lat, u_850.T[:,::2], v_850.T[:,::2], scale=200.)
     
     ax1.grid(True,linestyle=':', linewidth=2, color='k')
@@ -118,5 +106,5 @@ def precip_u_hms_jra(lonin=[110.,120.]):
     plt.close()
 
 
-#precip_u_hms_jra()
+precip_u_hms_jra()
 #precip_u_hms_jra(lonin=[60.,150.])

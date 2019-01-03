@@ -7,7 +7,7 @@ import sh
 from pylab import rcParams
 from mpl_toolkits.mplot3d import Axes3D
 import statsmodels.api as sm
-from data_handling_updates import gradients as gr
+from data_handling_updates import gradients as gr, model_constants as mc
 from windspharm.xarray import VectorWind
 
 plot_dir = '/scratch/rg419/plots/onset_variability/'
@@ -77,6 +77,12 @@ dvdx = gr.ddx(data_v, a=6371.0e3)
 dudy = gr.ddy(data_u, a=6371.0e3)
 data_vo = (dvdx - dudy)*86400.
 
+data_t = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/temp_monthly/atmos_monthly_together.nc')
+data_q = xr.open_dataset('/disca/share/rg419/JRA_55/sphum_monthly/atmos_monthly_together.nc')
+data_z = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/height_monthly/atmos_monthly_together.nc')
+
+data_mse = (mc.cp_air*data_t.var11 + mc.L*data_q.var51 + 9.81*data_z.var7)/1000.
+
 # Create a VectorWind instance to handle the computation
 w = VectorWind(data_u.sel(lev=np.arange(5000.,100001.,5000.)), data_v.sel(lev=np.arange(5000.,100001.,5000.)))
 # Compute variables
@@ -93,11 +99,11 @@ land_mask = '/scratch/rg419/python_scripts/land_era/ERA-I_Invariant_0125.nc'
 land = xr.open_dataset(land_mask)
 
 
-def plot_winter_climate(data, title, levels_clim=np.arange(-50.,51.,5.), levels=np.arange(-5.,5.1,0.5), local=False):
+def plot_winter_climate(data, title, levels_clim=np.arange(-50.,51.,5.), levels=np.arange(-5.,5.1,0.5), local=False, lev=20000.):
     
     # Add a coordinate with the early/late/normal timing    
     data.coords['timing'] = (('time'), np.repeat(onsets_scsm.timing.values,12)) 
-    data = data.sel(lev=20000.)
+    data = data.sel(lev=lev)
     
     data_clim = data.groupby('time.month').mean('time').sel(month=[1,2,3]).mean('month')
     data_early = (data.where(data['timing']=='Early', drop=True).groupby('time.month').mean('time') - data.groupby('time.month').mean('time')).sel(month=[1,2,3]).mean('month')
@@ -121,7 +127,7 @@ def plot_winter_climate(data, title, levels_clim=np.arange(-50.,51.,5.), levels=
         land.lsm[0,:,:].plot.contour(ax=ax, x='longitude', y='latitude', levels=np.arange(-1.,2.,1.), add_labels=False, colors='k')
         if local:
             ax.set_xlim(70.,150.)
-            ax.set_ylim(0.,60.)
+            ax.set_ylim(-10.,50.)
         else:
             ax.set_xticks(np.arange(0.,361.,90.))
             ax.set_yticks(np.arange(-60.,61.,30.))
@@ -135,7 +141,11 @@ def plot_winter_climate(data, title, levels_clim=np.arange(-50.,51.,5.), levels=
     
     plt.subplots_adjust(left=0.06, right=0.97, top=0.92, bottom=0.1, hspace=0.3, wspace=0.2)
     
-    cb1=fig.colorbar(f1, ax=ax1, use_gridspec=True, orientation = 'horizontal',fraction=0.07, pad=0.2, aspect=30, shrink=1.)
+    
+    if title=='mse_jra':
+        cb1=fig.colorbar(f1, ax=ax1, use_gridspec=True, orientation = 'horizontal',fraction=0.07, pad=0.2, aspect=60, shrink=1., ticks=np.arange(250.,340.,20.))
+    else:
+        cb1=fig.colorbar(f1, ax=ax1, use_gridspec=True, orientation = 'horizontal',fraction=0.07, pad=0.2, aspect=30, shrink=1.)
     cb2=fig.colorbar(f2, ax=axes[1:], use_gridspec=True, orientation = 'horizontal',fraction=0.07, pad=0.2, aspect=60, shrink=0.75)
     #cb1.set_label(var)
     
@@ -150,10 +160,12 @@ plot_winter_climate(data_vo, 'vo_jra', levels_clim=np.arange(-3.,4.,1.), levels=
 plot_winter_climate(data_vo, 'vo_jra', levels_clim=np.arange(-3.,4.,1.), levels=np.arange(-0.6,0.7,0.2), local=True)
 plot_winter_climate(data_u, 'ucomp')
 plot_winter_climate(data_u, 'ucomp', local=True)
-plot_winter_climate(mass_flux_zon, 'mass_flux_zon_jra', levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
-plot_winter_climate(mass_flux_zon, 'mass_flux_zon_jra', local=True, levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
-plot_winter_climate(mass_flux_merid, 'mass_flux_merid_jra', levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
-plot_winter_climate(mass_flux_merid, 'mass_flux_merid_jra', local=True, levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
+plot_winter_climate(data_mse, 'mse', local=True, levels_clim=np.arange(250.,331.,10.), levels=np.arange(-2.5,2.7,0.25), lev=85000.)
+plot_winter_climate(data_mse, 'mse', levels_clim=np.arange(250.,331.,10.), levels=np.arange(-2.5,2.7,0.25), lev=85000.)
+#plot_winter_climate(mass_flux_zon, 'mass_flux_zon_jra', levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
+#plot_winter_climate(mass_flux_zon, 'mass_flux_zon_jra', local=True, levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
+#plot_winter_climate(mass_flux_merid, 'mass_flux_merid_jra', levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
+#plot_winter_climate(mass_flux_merid, 'mass_flux_merid_jra', local=True, levels_clim=np.arange(-0.0055,0.0056,0.001), levels=np.arange(-0.0012,0.0013,0.0002))
 
 data_u.close()
 data_v.close()
