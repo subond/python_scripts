@@ -1,5 +1,5 @@
 ''' 
-11/10/2018 Make Isca hms of different regions in idealised asymmetry runs e.g. half shallow
+7/12/2018 Make Isca hms of different regions in idealised asymmetry runs e.g. half shallow
 '''
 import numpy as np
 import xarray as xr
@@ -22,7 +22,7 @@ mkdir(plot_dir)
 
 def isca_monsoon_hm(run):
     
-    data = xr.open_dataset('/disca/share/rg419/Data_moist/climatologies/' + run + '.nc')
+    data = xr.open_dataset('/scratch/rg419/Data_moist/climatologies/' + run + '.nc')
 
     mn_dic = month_dic(1)
     tickspace = [1, 19, 37, 55]
@@ -44,15 +44,15 @@ def isca_monsoon_hm(run):
         ax.set_title(title)
         return f1
     
-    f1 = precip_plot(data, ax1, [35.,55.], '35-55 E')
+    f1 = precip_plot(data, ax1, [0.,10.], '0-10 E')
     precip_plot(data, ax2, [80.,100.], '80-100 E')
-    precip_plot(data, ax3, [125.,145.], '125-145 E')
-    #precip_plot(data, ax3, [160.,170.], '150-160 E')
-    precip_plot(data, ax4, [170.,190.], '170-190 E')
-    precip_plot(data, ax5, [215.,235.], '215-235 E')
-    precip_plot(data, ax6, [260.,280.], '260-280 E')
-    precip_plot(data, ax7, [305.,325.], '305-325 E')
-    precip_plot(data, ax8, [350.,10.], '350-10 E')
+    #precip_plot(data, ax3, [125.,145.], '125-145 E')
+    precip_plot(data, ax3, [170.,180.], '170-180 E')
+    precip_plot(data, ax4, [180.,190.], '180-190 E')
+    #precip_plot(data, ax5, [215.,235.], '215-235 E')
+    precip_plot(data, ax5, [260.,280.], '260-280 E')
+    #precip_plot(data, ax7, [305.,325.], '305-325 E')
+    precip_plot(data, ax6, [350.,0.], '350-0 E')
     
     ax1.set_ylabel('Latitude')
     ax5.set_ylabel('Latitude')
@@ -65,7 +65,7 @@ def isca_monsoon_hm(run):
     cb1.set_label('Precipitation, mm/day')
     
     # Save as a pdf
-    plt.savefig(plot_dir + 'precip_monsoons_' + run + '.pdf', format='pdf')
+    plt.savefig(plot_dir + 'precip_monsoons_' + run + '_diffsplit.pdf', format='pdf')
     plt.close()
     
     data.close()
@@ -107,9 +107,9 @@ def ap_monsoon_hm(run, title):
     data.close()
     
 
-ap_monsoon_hm('ap_2', '2m Slab Ocean')
-ap_monsoon_hm('mld_20', '20m Slab Ocean')
-#isca_monsoon_hm('half_shallow')
+#ap_monsoon_hm('ap_2', '2m Slab Ocean')
+#ap_monsoon_hm('mld_20', '20m Slab Ocean')
+isca_monsoon_hm('half_shallow')
 #isca_monsoon_hm('half_shallow_5')
 #isca_monsoon_hm('half_shallow_10')
 #isca_monsoon_hm('half_nh_shallow')

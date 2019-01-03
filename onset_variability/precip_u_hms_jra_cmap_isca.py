@@ -38,12 +38,14 @@ def pentad_mean_climatology(data, years):  # Function to get pentad of year
 def precip_u_hms_jra(lonin=[110.,120.]):
     
     data_precip = xr.open_dataset('/disca/share/rg419/CMAP_precip.pentad.mean.nc', chunks={'time': 30})
+
     data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_850.nc', chunks={'time': 30})
     data_u = data_u['var33'].load().loc['1958-01':'2016-12']
 
     # v has different time coord to u, presumably due to how Stephen has downloaded/averaged. I think the two are equivalent, so just substitute the time dimension into v
     data_v_temp = xr.open_dataset('/disca/share/rg419/jra_vcomp_daily_850.nc', chunks={'time': 30})
     data_v = xr.DataArray(data_v_temp.sel(lev=85000.).var34.values, coords={'time': data_u.time, 'lat': data_u.lat, 'lon': data_u.lon}, dims=('time','lat','lon'))    
+
     print('files opened')
     
     data_precip.coords['pentad'] = (('time'), np.tile(np.arange(1,74),38))
