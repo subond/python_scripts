@@ -16,10 +16,6 @@ plot_dir = '/scratch/rg419/plots/scs_monsoon/'
 mkdir = sh.mkdir.bake('-p')
 mkdir(plot_dir)
 
-data = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/vcomp_daily/atmos_daily_together.nc', chunks={'time': 30})
-data = data.sel(lev=85000.)
-data.to_netcdf('/disca/share/rg419/jra_vcomp_daily_850.nc')
-
 
 def pentad_mean_climatology(data, years):  # Function to get pentad of year
     pentad_years = np.array([])
@@ -43,15 +39,15 @@ def pentad_mean_climatology(data, years):  # Function to get pentad of year
 
 def precip_u_hms_jra(lonin=[110.,120.]):
     
-    data_precip = xr.open_dataset('/disca/share/rg419/CMAP_precip.pentad.mean.nc')
+    data_precip = xr.open_dataset('/disca/share/rg419/CMAP_precip.pentad.mean.nc', chunks={'time': 30})
     #data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_200.nc')
-    data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_850.nc')
+    data_u = xr.open_dataset('/disca/share/rg419/jra_ucomp_daily_850.nc', chunks={'time': 30})
     data_u = data_u['var33'].load().loc['1958-01':'2016-12']
     #data_u_clim = data_u.groupby('time.dayofyear').mean('time')
     #print(data_u_clim)
 
     # v has different time coord to u, presumably due to how Stephen has downloaded/averaged. I think the two are equivalent, so just substitute the time dimension into v
-    data_v_temp = xr.open_dataset('/disca/share/rg419/jra_vcomp_daily_200.nc')
+    data_v_temp = xr.open_dataset('/disca/share/rg419/jra_vcomp_daily_200.nc', chunks={'time': 30})
     data_v = xr.DataArray(data_v_temp.var34.values, coords=data_u.coords, dims=data_u.dims)
     
     #data_u = xr.open_dataset('/disca/share/reanalysis_links/jra_55/1958_2016/ucomp_daily/atmos_daily_together.nc')
